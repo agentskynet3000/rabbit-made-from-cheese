@@ -143,12 +143,19 @@ def build_filename(counter: int, setting: str) -> str:
 
 
 def generate_image(setting: str) -> bytes:
-    style_name, style_desc = random.choice(STYLES)
+    # Pick EITHER a setting OR a style, never both
+    use_style = random.random() > 0.5
+    if use_style:
+        style_name, style_desc = random.choice(STYLES)
+        extra = style_desc
+        slug_extra = style_name
+    else:
+        extra = setting
+        slug_extra = setting
+    
     prompt = (
-        f"(rabbit made from cheese:1.4), (cheese rabbit sculpture:1.3), "
-        f"(body made of cheese:1.2), cheese texture, "
-        f"{setting}, "
-        f"{style_desc}"
+        f"(rabbit made from cheese:1.4), (cheese rabbit:1.3), "
+        f"cheese texture, {extra}"
     )
     payload = {
         "prompt": prompt,
