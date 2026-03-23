@@ -145,12 +145,14 @@ def build_filename(counter: int, setting: str) -> str:
 def generate_image(setting: str) -> bytes:
     style_name, style_desc = random.choice(STYLES)
     prompt = (
-        f"rabbit made from cheese, {setting}, "
+        f"(rabbit made from cheese:1.4), (cheese rabbit sculpture:1.3), "
+        f"(body made of cheese:1.2), cheese texture, "
+        f"{setting}, "
         f"{style_desc}"
     )
     payload = {
         "prompt": prompt,
-        "negative_prompt": "low quality, blurry, deformed",
+        "negative_prompt": "low quality, blurry, deformed, normal rabbit, fur, realistic animal fur",
         "steps": 25,
         "cfg_scale": 7,
         "width": 1024,
