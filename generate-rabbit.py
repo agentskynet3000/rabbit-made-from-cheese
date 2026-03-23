@@ -196,18 +196,33 @@ def save_image(img_bytes: bytes, filename: str) -> Path:
 
 
 def update_index_html(filename: str):
-    """Insert the new image path into the images array in index.html."""
+    """Insert the new image path into the images array and update OG tags."""
     index_path = REPO_DIR / "index.html"
     content = index_path.read_text()
     img_path = f"images/{filename}"
-    # Insert before the closing bracket of the images array
+
+    # Insert into gallery array
     new_entry = f'      "{img_path}"'
     content = content.replace(
         '    ];',
         f'{new_entry},\n    ];'
     )
+
+    # Update OG image tags to newest rabbit
+    img_url = f"https://rabbit-made-from-cheese.pages.dev/{img_path}"
+    content = re.sub(
+        r'(<meta property="og:image" content=")[^"]*(")',
+        rf'\g<1>{img_url}\g<2>',
+        content
+    )
+    content = re.sub(
+        r'(<meta name="twitter:image" content=")[^"]*(")',
+        rf'\g<1>{img_url}\g<2>',
+        content
+    )
+
     index_path.write_text(content)
-    print(f"Updated index.html with {img_path}")
+    print(f"Updated index.html with {img_path} (OG tags updated)")
 
 
 def git_push(filename: str, setting: str):
