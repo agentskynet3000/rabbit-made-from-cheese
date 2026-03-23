@@ -6,7 +6,7 @@
   <title>Rabbit Made From Cheese</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -15,48 +15,126 @@
     }
 
     body {
-      background: #ffd6e7;
-      color: #111;
-      font-family: 'Inter', sans-serif;
+      background: #FFB7C5;
+      color: #2D1B2E;
+      font-family: 'Nunito', sans-serif;
       min-height: 100vh;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes wobble {
+      0%, 100% { transform: rotate(0deg); }
+      25%       { transform: rotate(-2deg); }
+      75%       { transform: rotate(2deg); }
+    }
+
+    @keyframes tagline-show {
+      0%    { opacity: 0; transform: translateY(5px); }
+      5%    { opacity: 1; transform: translateY(0); }
+      15%   { opacity: 1; transform: translateY(0); }
+      20%   { opacity: 0; transform: translateY(-5px); }
+      100%  { opacity: 0; }
+    }
+
+    @keyframes badge-pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.05); }
     }
 
     /* ── HEADER ── */
     #header {
-      padding: 48px 32px 32px;
+      padding: 52px 40px 36px;
+      text-align: center;
+    }
+
+    .title-wrap {
+      display: inline-block;
+      position: relative;
     }
 
     #main-title {
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      font-weight: 700;
-      color: #111;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-
-    #drop-line {
-      margin-top: 10px;
-      font-size: 0.875rem;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 6vw, 3.6rem);
       font-weight: 400;
-      color: #888;
+      color: #FF69B4;
       letter-spacing: 0.01em;
+      line-height: 1.1;
+      text-shadow: 3px 3px 0px #FFF0F5;
     }
 
-    #header hr {
-      margin-top: 32px;
+    #main-title::before {
+      content: "★ ";
+      color: #FF69B4;
+      font-size: 0.7em;
+      vertical-align: middle;
+    }
+
+    #main-title::after {
+      content: " ★";
+      color: #FF69B4;
+      font-size: 0.7em;
+      vertical-align: middle;
+    }
+
+    .new-drop-badge {
+      display: inline-block;
+      background: #FF69B4;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-top: 14px;
+      animation: badge-pulse 3s ease-in-out infinite;
+    }
+
+    /* ── ROTATING TAGLINES ── */
+    .tagline-wrap {
+      position: relative;
+      height: 2rem;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .tagline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #2D1B2E;
+      opacity: 0;
+      text-align: center;
+      animation: tagline-show 20s infinite;
+    }
+
+    .tagline:nth-child(1) { animation-delay: 0s; }
+    .tagline:nth-child(2) { animation-delay: 4s; }
+    .tagline:nth-child(3) { animation-delay: 8s; }
+    .tagline:nth-child(4) { animation-delay: 12s; }
+    .tagline:nth-child(5) { animation-delay: 16s; }
+
+    #header-divider {
+      margin: 28px auto 0;
+      max-width: 900px;
       border: none;
-      border-top: 1px solid rgba(0, 0, 0, 0.12);
+      border-top: 2px dashed rgba(255, 105, 180, 0.4);
     }
 
     /* ── GRID ── */
     #gallery {
-      padding: 24px 32px 0;
+      padding: 28px 40px 0;
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     #grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      gap: 20px;
     }
 
     .thumb {
@@ -67,32 +145,57 @@
       width: 100%;
       padding-top: 100%;
       position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 20px;
+      overflow: visible;
+      transition: transform 0.15s ease;
     }
 
     .thumb:hover .thumb-img-wrap {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      animation: wobble 0.4s ease infinite;
+    }
+
+    .thumb-img-inner {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 3px solid #fff;
+      box-shadow: 4px 4px 0px #FF69B4;
+      background: #FFF0F5;
     }
 
     .thumb img {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
+    .thumb-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #FF69B4;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 2px solid #fff;
+      z-index: 2;
+      white-space: nowrap;
+    }
+
     .thumb-caption {
-      margin-top: 6px;
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: #888;
-      padding: 0 2px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      font-style: italic;
+      color: #2D1B2E;
+      text-align: center;
+      padding: 0 4px;
     }
 
     /* ── LIGHTBOX ── */
@@ -100,7 +203,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(45, 27, 46, 0.88);
       z-index: 200;
       align-items: center;
       justify-content: center;
@@ -117,13 +220,16 @@
       max-width: 88vw;
       max-height: 82vh;
       object-fit: contain;
-      border-radius: 16px;
+      border-radius: 20px;
+      border: 3px solid #fff;
+      box-shadow: 6px 6px 0px #FF69B4;
     }
 
     #lightbox-caption {
+      font-family: 'Nunito', sans-serif;
       font-size: 0.85rem;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.55);
+      font-style: italic;
+      color: rgba(255, 240, 245, 0.7);
     }
 
     #lightbox-close {
@@ -132,46 +238,64 @@
       right: 24px;
       font-size: 1.5rem;
       font-weight: 300;
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(255, 240, 245, 0.5);
       cursor: pointer;
       line-height: 1;
       transition: color 0.2s;
     }
 
     #lightbox-close:hover {
-      color: #fff;
+      color: #FF69B4;
     }
 
     /* ── FOOTER ── */
     #footer {
-      margin-top: 48px;
-      padding: 32px;
-      border-top: 1px solid rgba(0, 0, 0, 0.12);
+      margin-top: 56px;
+      padding: 36px 40px;
+      background: #fff;
+      border-top: 4px solid #FF69B4;
       text-align: center;
     }
 
-    #footer .footer-main {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #444;
+    #footer .footer-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      color: #FF69B4;
+      letter-spacing: 0.02em;
     }
 
-    #footer .footer-url {
-      margin-top: 6px;
+    #footer .footer-line {
+      margin-top: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #2D1B2E;
+      line-height: 1.8;
+    }
+
+    #footer .footer-copy {
+      margin-top: 4px;
       font-size: 0.75rem;
-      color: #aaa;
+      color: #a07080;
+    }
+
+    #footer .footer-links {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: #c090a8;
+      letter-spacing: 0.03em;
     }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       #grid { grid-template-columns: repeat(2, 1fr); }
+      #gallery { padding: 20px 24px 0; }
     }
 
     @media (max-width: 480px) {
-      #header { padding: 32px 20px 24px; }
-      #gallery { padding: 20px 20px 0; }
+      #header { padding: 36px 20px 28px; }
+      #gallery { padding: 20px 16px 0; }
       #footer { padding: 32px 20px; }
-      #grid { grid-template-columns: repeat(2, 1fr); }
+      #grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
     }
   </style>
 </head>
@@ -179,9 +303,20 @@
 
   <!-- ── HEADER ── -->
   <header id="header">
-    <h1 id="main-title">Rabbit Made From Cheese</h1>
-    <p id="drop-line">Drop #<span id="rabbit-count">0</span> — Every hour, a new rabbit.</p>
-    <hr>
+    <div class="title-wrap">
+      <h1 id="main-title">Rabbit Made From Cheese</h1>
+    </div>
+    <div>
+      <span class="new-drop-badge">NEW DROP EVERY HOUR</span>
+    </div>
+    <div class="tagline-wrap">
+      <p class="tagline">A rabbit. Made from cheese. Every hour. On the hour.</p>
+      <p class="tagline">Scientists are baffled. Rabbits are concerned.</p>
+      <p class="tagline">Drop #<span id="rabbit-count-tagline">0</span> in our ongoing dairy-based art investigation.</p>
+      <p class="tagline">Your parents warned you about this website.</p>
+      <p class="tagline">Each rabbit is unique. Like a snowflake. But cheese.</p>
+    </div>
+    <hr id="header-divider">
   </header>
 
   <!-- ── GALLERY ── -->
@@ -191,8 +326,13 @@
 
   <!-- ── FOOTER ── -->
   <footer id="footer">
-    <p class="footer-main">A new rabbit every hour. Since March 2026.</p>
-    <p class="footer-url">rabbit-made-from-cheese.pages.dev</p>
+    <p class="footer-title">&#9733; Rabbit Made From Cheese &#9733;</p>
+    <p class="footer-line">
+      An ongoing investigation into the intersection of dairy and lagomorphs.<br>
+      New rabbit every hour. We are not stopping. Ever.
+    </p>
+    <p class="footer-copy">&copy; 2026 Nobody in particular. All rights reserved (to the cheese)</p>
+    <p class="footer-links">About &middot; FAQ &middot; Newsletter &middot; Therapy</p>
   </footer>
 
   <!-- ── LIGHTBOX ── -->
@@ -221,6 +361,11 @@
       return name.replace(/^rabbit-\d+-/, '').replace(/-/g, ' ');
     }
 
+    function badgeFromSrc(src) {
+      const match = src.match(/rabbit-(\d+)-/);
+      return match ? '#' + match[1].padStart(3, '0') : '';
+    }
+
     function openLightbox(src, caption) {
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox-caption').textContent = caption;
@@ -242,10 +387,14 @@
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
 
-      document.getElementById('rabbit-count').textContent = shuffled.length;
+      const count = shuffled.length;
+      const countEl = document.getElementById('rabbit-count');
+      if (countEl) countEl.textContent = count;
+      document.getElementById('rabbit-count-tagline').textContent = count;
 
       shuffled.forEach(src => {
         const caption = captionFromSrc(src);
+        const badge = badgeFromSrc(src);
 
         const div = document.createElement('div');
         div.className = 'thumb';
@@ -253,16 +402,27 @@
         const wrap = document.createElement('div');
         wrap.className = 'thumb-img-wrap';
 
+        const inner = document.createElement('div');
+        inner.className = 'thumb-img-inner';
+
         const img = document.createElement('img');
         img.src = src;
         img.loading = 'lazy';
         img.alt = caption;
 
+        if (badge) {
+          const badgeEl = document.createElement('span');
+          badgeEl.className = 'thumb-badge';
+          badgeEl.textContent = badge;
+          wrap.appendChild(badgeEl);
+        }
+
         const cap = document.createElement('div');
         cap.className = 'thumb-caption';
         cap.textContent = caption;
 
-        wrap.appendChild(img);
+        inner.appendChild(img);
+        wrap.appendChild(inner);
         div.appendChild(wrap);
         div.appendChild(cap);
         div.onclick = () => openLightbox(src, caption);
