@@ -143,15 +143,24 @@ def build_filename(counter: int, setting: str) -> str:
 
 
 def generate_image(setting: str) -> bytes:
+    return generate_image_with_overrides(setting)
+
+
+def generate_image_with_overrides(setting: str, forced_style: str = None) -> bytes:
     # Pick EITHER a setting OR a style, never both
-    use_style = random.random() > 0.5
-    if use_style:
+    if forced_style:
+        # Find the matching style by name
+        match = next((s for s in STYLES if s[0].lower() == forced_style.lower()), None)
+        if match:
+            style_name, style_desc = match
+            extra = style_desc
+        else:
+            extra = forced_style  # fallback: use as-is
+    elif random.random() > 0.5:
         style_name, style_desc = random.choice(STYLES)
         extra = style_desc
-        slug_extra = style_name
     else:
         extra = setting
-        slug_extra = setting
     
     prompt = (
         f"(rabbit made from cheese:1.4), (cheese rabbit:1.3), "
@@ -225,14 +234,20 @@ def git_push(filename: str, setting: str):
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    setting = random.choice(SETTINGS)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--style", help="Force a specific style name (e.g. 'kawaii')")
+    parser.add_argument("--setting", help="Force a specific setting (e.g. 'in the Vatican')")
+    args = parser.parse_args()
+
+    setting = args.setting or random.choice(SETTINGS)
     print(f"Setting: {setting}")
 
     counter = next_counter()
     filename = build_filename(counter, setting)
     print(f"Filename: {filename}")
 
-    img_bytes = generate_image(setting)
+    img_bytes = generate_image_with_overrides(setting, forced_style=args.style)
     save_image(img_bytes, filename)
     update_index_html(filename)
     git_push(filename, setting)

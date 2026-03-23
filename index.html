@@ -385,6 +385,13 @@
         <h1 id="main-title">RABBIT MADE<br>FROM CHEESE</h1>
         <p id="header-sub">A new rabbit every hour. We are not stopping. Ever.</p>
         <span id="drop-badge">NEW DROP EVERY HOUR</span>
+        <div id="subscribe-wrap" style="margin-top:20px;">
+          <div id="subscribe-form">
+            <input type="email" id="sub-email" placeholder="your@email.com" style="font-family:'Press Start 2P',monospace;font-size:0.5rem;padding:10px 14px;border:3px solid #2D1B2E;background:#fff;color:#2D1B2E;width:220px;box-shadow:3px 3px 0 #2D1B2E;outline:none;" />
+            <button onclick="submitSubscribe()" style="font-family:'Press Start 2P',monospace;font-size:0.5rem;padding:10px 16px;background:#2D1B2E;color:#F5C518;border:3px solid #2D1B2E;cursor:pointer;box-shadow:3px 3px 0 #1a0a10;margin-left:6px;">SUBSCRIBE</button>
+          </div>
+          <div id="subscribe-msg" style="display:none;font-family:'Press Start 2P',monospace;font-size:0.55rem;margin-top:10px;color:#2D1B2E;line-height:2;"></div>
+        </div>
     <p id="countdown" style="font-family:'Press Start 2P',monospace; font-size:0.6rem; color:#2D1B2E; margin-top:0.5rem; text-align:center; letter-spacing:0.05em;">
       next drop in <span id="timer">--:--</span>
     </p>
@@ -627,6 +634,46 @@
     }
 
     buildTicker();
+
+    // ── SUBSCRIBE ──
+    async function submitSubscribe() {
+      const email = document.getElementById('sub-email').value.trim();
+      const msgEl = document.getElementById('subscribe-msg');
+      const formEl = document.getElementById('subscribe-form');
+
+      if (!email || !email.includes('@')) {
+        showMsg('please enter a valid email.', '#FF69B4');
+        return;
+      }
+
+      try {
+        const res = await fetch('/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          formEl.style.display = 'none';
+          showMsg('subscribed. rabbits incoming. you cannot stop this.', '#2D1B2E');
+        } else {
+          showMsg(data.error || 'something went wrong.', '#FF69B4');
+        }
+      } catch (e) {
+        showMsg('network error. the rabbits are trying.', '#FF69B4');
+      }
+    }
+
+    function showMsg(text, color) {
+      const el = document.getElementById('subscribe-msg');
+      el.style.color = color;
+      el.textContent = text;
+      el.style.display = 'block';
+    }
+
+    document.getElementById('sub-email').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitSubscribe();
+    });
 
     // Countdown to next hour
     function updateCountdown() {
