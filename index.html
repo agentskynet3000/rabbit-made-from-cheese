@@ -6,7 +6,8 @@
   <title>Rabbit Made From Cheese</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -17,85 +18,75 @@
     body {
       background: #FFB7C5;
       color: #2D1B2E;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Press Start 2P', monospace;
       min-height: 100vh;
+      image-rendering: pixelated;
     }
 
     /* ── ANIMATIONS ── */
-    @keyframes wobble {
-      0%, 100% { transform: rotate(0deg); }
-      25%       { transform: rotate(-2deg); }
-      75%       { transform: rotate(2deg); }
-    }
-
     @keyframes tagline-show {
-      0%    { opacity: 0; transform: translateY(5px); }
+      0%    { opacity: 0; transform: translateY(4px); }
       5%    { opacity: 1; transform: translateY(0); }
       15%   { opacity: 1; transform: translateY(0); }
-      20%   { opacity: 0; transform: translateY(-5px); }
+      20%   { opacity: 0; transform: translateY(-4px); }
       100%  { opacity: 0; }
     }
 
-    @keyframes badge-pulse {
+    @keyframes badge-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0.6; }
+    }
+
+    @keyframes pixel-hover {
       0%, 100% { transform: scale(1); }
-      50%       { transform: scale(1.05); }
+      50% { transform: scale(1.03); }
+    }
+
+    /* ── LAYOUT ── */
+    #page-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px;
     }
 
     /* ── HEADER ── */
-    #header {
-      padding: 52px 40px 36px;
+    #header-container {
+      margin-bottom: 32px;
+      background: #fff !important;
       text-align: center;
     }
 
-    .title-wrap {
-      display: inline-block;
-      position: relative;
-    }
-
     #main-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(2rem, 6vw, 3.6rem);
-      font-weight: 400;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(0.9rem, 3vw, 1.6rem);
       color: #FF69B4;
-      letter-spacing: 0.01em;
-      line-height: 1.1;
-      text-shadow: 3px 3px 0px #FFF0F5;
+      line-height: 1.6;
+      text-shadow: 3px 3px 0px #FFE4EF;
+      margin-bottom: 20px;
     }
 
-    #main-title::before {
-      content: "★ ";
-      color: #FF69B4;
-      font-size: 0.7em;
-      vertical-align: middle;
+    .header-icons {
+      margin-bottom: 16px;
     }
 
-    #main-title::after {
-      content: " ★";
-      color: #FF69B4;
-      font-size: 0.7em;
-      vertical-align: middle;
+    .header-icons i {
+      margin: 0 6px;
     }
 
-    .new-drop-badge {
-      display: inline-block;
-      background: #FF69B4;
-      color: #fff;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 999px;
-      margin-top: 14px;
-      animation: badge-pulse 3s ease-in-out infinite;
+    /* ── BADGE ── */
+    .new-drop-badge-wrap {
+      margin: 16px 0;
+    }
+
+    .new-drop-badge-wrap .nes-badge span {
+      animation: badge-blink 1.4s step-end infinite;
     }
 
     /* ── ROTATING TAGLINES ── */
     .tagline-wrap {
       position: relative;
-      height: 2rem;
-      margin-top: 14px;
+      height: 3.5rem;
+      margin: 20px 0 8px;
       overflow: hidden;
     }
 
@@ -103,12 +94,14 @@
       position: absolute;
       left: 0;
       right: 0;
-      font-size: 0.9rem;
-      font-weight: 500;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(0.45rem, 1.2vw, 0.6rem);
       color: #2D1B2E;
       opacity: 0;
       text-align: center;
       animation: tagline-show 20s infinite;
+      line-height: 1.8;
+      padding: 0 8px;
     }
 
     .tagline:nth-child(1) { animation-delay: 0s; }
@@ -117,51 +110,44 @@
     .tagline:nth-child(4) { animation-delay: 12s; }
     .tagline:nth-child(5) { animation-delay: 16s; }
 
-    #header-divider {
-      margin: 28px auto 0;
-      max-width: 900px;
-      border: none;
-      border-top: 2px dashed rgba(255, 105, 180, 0.4);
-    }
-
     /* ── GRID ── */
     #gallery {
-      padding: 28px 40px 0;
-      max-width: 1400px;
-      margin: 0 auto;
+      margin-bottom: 32px;
     }
 
     #grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
+      gap: 24px;
     }
 
     .thumb {
       cursor: pointer;
     }
 
-    .thumb-img-wrap {
+    .thumb-nes-wrap {
+      position: relative;
       width: 100%;
       padding-top: 100%;
-      position: relative;
-      border-radius: 20px;
-      overflow: visible;
+      margin-bottom: 0;
       transition: transform 0.15s ease;
     }
 
-    .thumb:hover .thumb-img-wrap {
-      animation: wobble 0.4s ease infinite;
+    .thumb:hover .thumb-nes-wrap {
+      transform: scale(1.04);
     }
 
-    .thumb-img-inner {
+    .thumb-nes-inner {
       position: absolute;
       inset: 0;
-      border-radius: 20px;
-      overflow: hidden;
-      border: 3px solid #fff;
-      box-shadow: 4px 4px 0px #FF69B4;
       background: #FFF0F5;
+      overflow: hidden;
+    }
+
+    /* NES container inside thumb — override padding for image fill */
+    .thumb-nes-inner.nes-container {
+      padding: 4px !important;
+      height: 100%;
     }
 
     .thumb img {
@@ -169,33 +155,26 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      image-rendering: auto;
     }
 
-    .thumb-badge {
+    .thumb-badge-wrap {
       position: absolute;
-      top: -8px;
-      right: -8px;
-      background: #FF69B4;
-      color: #fff;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 2px solid #fff;
+      top: -10px;
+      right: -10px;
       z-index: 2;
-      white-space: nowrap;
+      font-size: 0.55rem;
     }
 
     .thumb-caption {
       margin-top: 10px;
-      font-size: 0.78rem;
-      font-weight: 500;
-      font-style: italic;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.5rem;
       color: #2D1B2E;
       text-align: center;
-      padding: 0 4px;
+      line-height: 1.8;
+      padding: 0 2px;
+      word-break: break-word;
     }
 
     /* ── LIGHTBOX ── */
@@ -203,12 +182,12 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(45, 27, 46, 0.88);
+      background: rgba(20, 10, 20, 0.92);
       z-index: 200;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
       cursor: pointer;
     }
 
@@ -216,32 +195,41 @@
       display: flex;
     }
 
+    #lightbox-img-wrap {
+      max-width: 80vw;
+      max-height: 75vh;
+    }
+
+    #lightbox-img-wrap.nes-container {
+      padding: 8px !important;
+    }
+
     #lightbox img {
-      max-width: 88vw;
-      max-height: 82vh;
+      max-width: 76vw;
+      max-height: 70vh;
       object-fit: contain;
-      border-radius: 20px;
-      border: 3px solid #fff;
-      box-shadow: 6px 6px 0px #FF69B4;
+      display: block;
     }
 
     #lightbox-caption {
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.85rem;
-      font-style: italic;
-      color: rgba(255, 240, 245, 0.7);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem;
+      color: rgba(255, 240, 245, 0.8);
+      text-align: center;
+      line-height: 1.8;
     }
 
     #lightbox-close {
       position: fixed;
-      top: 20px;
-      right: 24px;
-      font-size: 1.5rem;
-      font-weight: 300;
-      color: rgba(255, 240, 245, 0.5);
+      top: 16px;
+      right: 20px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1rem;
+      color: rgba(255, 240, 245, 0.6);
       cursor: pointer;
-      line-height: 1;
-      transition: color 0.2s;
+      transition: color 0.1s;
+      background: none;
+      border: none;
     }
 
     #lightbox-close:hover {
@@ -249,96 +237,147 @@
     }
 
     /* ── FOOTER ── */
-    #footer {
-      margin-top: 56px;
-      padding: 36px 40px;
-      background: #fff;
-      border-top: 4px solid #FF69B4;
+    #footer-container {
+      background: #fff !important;
       text-align: center;
     }
 
-    #footer .footer-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.2rem;
+    .footer-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(0.6rem, 2vw, 0.9rem);
       color: #FF69B4;
-      letter-spacing: 0.02em;
-    }
-
-    #footer .footer-line {
-      margin-top: 8px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: #2D1B2E;
+      margin-bottom: 16px;
       line-height: 1.8;
     }
 
-    #footer .footer-copy {
-      margin-top: 4px;
-      font-size: 0.75rem;
-      color: #a07080;
+    .footer-sub {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+      color: #2D1B2E;
+      line-height: 2.2;
+      margin-bottom: 16px;
     }
 
-    #footer .footer-links {
-      margin-top: 10px;
-      font-size: 0.72rem;
+    .footer-copy {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.45rem;
+      color: #a07080;
+      margin-top: 12px;
+      line-height: 2;
+    }
+
+    .footer-icons {
+      margin: 12px 0;
+    }
+
+    .footer-icons i {
+      margin: 0 4px;
+    }
+
+    /* NES list nav override */
+    #footer-nav {
+      display: inline-block;
+      text-align: left;
+      margin-top: 16px;
+    }
+
+    #footer-nav.nes-list.is-disc li::before {
+      color: #FF69B4;
+    }
+
+    #footer-nav li {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.5rem;
       color: #c090a8;
-      letter-spacing: 0.03em;
+      line-height: 2.5;
+      cursor: pointer;
+    }
+
+    #footer-nav li:hover {
+      color: #FF69B4;
     }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      #grid { grid-template-columns: repeat(2, 1fr); }
-      #gallery { padding: 20px 24px 0; }
+      #grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
     }
 
     @media (max-width: 480px) {
-      #header { padding: 36px 20px 28px; }
-      #gallery { padding: 20px 16px 0; }
-      #footer { padding: 32px 20px; }
-      #grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      #page-wrap { padding: 16px 12px; }
+      #grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      #main-title { font-size: 0.75rem; }
+      .tagline { font-size: 0.38rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── HEADER ── -->
-  <header id="header">
-    <div class="title-wrap">
-      <h1 id="main-title">Rabbit Made From Cheese</h1>
-    </div>
-    <div>
-      <span class="new-drop-badge">NEW DROP EVERY HOUR</span>
-    </div>
-    <div class="tagline-wrap">
-      <p class="tagline">A rabbit. Made from cheese. Every hour. On the hour.</p>
-      <p class="tagline">Scientists are baffled. Rabbits are concerned.</p>
-      <p class="tagline">Drop #<span id="rabbit-count-tagline">0</span> in our ongoing dairy-based art investigation.</p>
-      <p class="tagline">Your parents warned you about this website.</p>
-      <p class="tagline">Each rabbit is unique. Like a snowflake. But cheese.</p>
-    </div>
-    <hr id="header-divider">
-  </header>
+  <div id="page-wrap">
 
-  <!-- ── GALLERY ── -->
-  <section id="gallery">
-    <div id="grid"></div>
-  </section>
+    <!-- ── HEADER ── -->
+    <header>
+      <div class="nes-container is-rounded" id="header-container">
+        <div class="header-icons">
+          <i class="nes-icon heart is-medium"></i>
+          <i class="nes-icon star is-medium"></i>
+          <i class="nes-icon heart is-medium"></i>
+        </div>
 
-  <!-- ── FOOTER ── -->
-  <footer id="footer">
-    <p class="footer-title">&#9733; Rabbit Made From Cheese &#9733;</p>
-    <p class="footer-line">
-      An ongoing investigation into the intersection of dairy and lagomorphs.<br>
-      New rabbit every hour. We are not stopping. Ever.
-    </p>
-    <p class="footer-copy">&copy; 2026 Nobody in particular. All rights reserved (to the cheese)</p>
-    <p class="footer-links">About &middot; FAQ &middot; Newsletter &middot; Therapy</p>
-  </footer>
+        <h1 id="main-title">RABBIT MADE<br>FROM CHEESE</h1>
+
+        <div class="new-drop-badge-wrap">
+          <span class="nes-badge"><span class="is-primary">NEW DROP EVERY HOUR</span></span>
+        </div>
+
+        <div class="tagline-wrap">
+          <p class="tagline">A rabbit. Made from cheese. Every hour.</p>
+          <p class="tagline">Scientists are baffled. Rabbits are concerned.</p>
+          <p class="tagline">Drop #<span id="rabbit-count-tagline">0</span>. We are not stopping. Ever.</p>
+          <p class="tagline">Your parents warned you about this website.</p>
+          <p class="tagline">Each rabbit unique. Like a snowflake. But cheese.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── GALLERY ── -->
+    <section id="gallery">
+      <div id="grid"></div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+      <div class="nes-container is-rounded" id="footer-container">
+        <div class="footer-icons">
+          <i class="nes-icon star is-small"></i>
+          <i class="nes-icon heart is-small"></i>
+          <i class="nes-icon star is-small"></i>
+        </div>
+
+        <p class="footer-title">RABBIT MADE FROM CHEESE</p>
+        <p class="footer-sub">
+          AN ONGOING INVESTIGATION<br>
+          New rabbit every hour. We will never stop.
+        </p>
+
+        <nav id="footer-nav" class="nes-list is-disc">
+          <li>About</li>
+          <li>FAQ</li>
+          <li>Newsletter</li>
+          <li>Therapy</li>
+        </nav>
+
+        <p class="footer-copy">&copy; 2026 Nobody. All cheese reserved.</p>
+      </div>
+    </footer>
+
+  </div><!-- /page-wrap -->
 
   <!-- ── LIGHTBOX ── -->
   <div id="lightbox" onclick="closeLightbox()">
-    <span id="lightbox-close" onclick="closeLightbox()">&#x2715;</span>
-    <img id="lightbox-img" src="" alt="">
+    <button id="lightbox-close" onclick="closeLightbox()">&#x2715;</button>
+    <div class="nes-container is-rounded" id="lightbox-img-wrap" onclick="event.stopPropagation()">
+      <img id="lightbox-img" src="" alt="">
+    </div>
     <p id="lightbox-caption"></p>
   </div>
 
@@ -380,16 +419,12 @@
       if (e.key === 'Escape') closeLightbox();
     });
 
-    document.getElementById('lightbox-img').addEventListener('click', e => e.stopPropagation());
-
     function renderGrid() {
       const shuffled = shuffle([...images]);
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
 
       const count = shuffled.length;
-      const countEl = document.getElementById('rabbit-count');
-      if (countEl) countEl.textContent = count;
       document.getElementById('rabbit-count-tagline').textContent = count;
 
       shuffled.forEach(src => {
@@ -400,10 +435,10 @@
         div.className = 'thumb';
 
         const wrap = document.createElement('div');
-        wrap.className = 'thumb-img-wrap';
+        wrap.className = 'thumb-nes-wrap';
 
         const inner = document.createElement('div');
-        inner.className = 'thumb-img-inner';
+        inner.className = 'thumb-nes-inner nes-container is-rounded';
 
         const img = document.createElement('img');
         img.src = src;
@@ -411,10 +446,16 @@
         img.alt = caption;
 
         if (badge) {
+          const badgeWrap = document.createElement('div');
+          badgeWrap.className = 'thumb-badge-wrap';
           const badgeEl = document.createElement('span');
-          badgeEl.className = 'thumb-badge';
-          badgeEl.textContent = badge;
-          wrap.appendChild(badgeEl);
+          badgeEl.className = 'nes-badge';
+          const badgeSpan = document.createElement('span');
+          badgeSpan.className = 'is-warning';
+          badgeSpan.textContent = badge;
+          badgeEl.appendChild(badgeSpan);
+          badgeWrap.appendChild(badgeEl);
+          wrap.appendChild(badgeWrap);
         }
 
         const cap = document.createElement('div');
