@@ -21,6 +21,86 @@
       font-family: 'Press Start 2P', monospace;
       min-height: 100vh;
       image-rendering: pixelated;
+      padding-bottom: 100px;
+    }
+
+    /* ── SUBSCRIBE BAR (fixed bottom) ── */
+    #subscribe-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: #F5C518;
+      border-top: 4px solid #2D1B2E;
+      box-shadow: 0 -4px 0 #2D1B2E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 20px;
+      flex-wrap: wrap;
+    }
+
+    #subscribe-bar label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+      color: #2D1B2E;
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+    }
+
+    #sub-email {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.5rem;
+      padding: 10px 14px;
+      border: 3px solid #2D1B2E;
+      background: #fff;
+      color: #2D1B2E;
+      width: 240px;
+      box-shadow: 3px 3px 0 #2D1B2E;
+      outline: none;
+    }
+
+    #sub-email:focus {
+      box-shadow: 3px 3px 0 #2D1B2E, 0 0 0 2px #FF69B4;
+    }
+
+    #sub-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+      padding: 10px 20px;
+      background: #2D1B2E;
+      color: #F5C518;
+      border: 3px solid #2D1B2E;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 #1a0a10;
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    #sub-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 #1a0a10;
+    }
+
+    #sub-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 #1a0a10;
+    }
+
+    #subscribe-msg {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.5rem;
+      color: #2D1B2E;
+      line-height: 1.8;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      #subscribe-bar { flex-direction: column; gap: 8px; padding: 12px 16px; }
+      #sub-email { width: 100%; max-width: 300px; }
     }
 
     /* ── NEWS TICKER ── */
@@ -385,13 +465,7 @@
         <h1 id="main-title">RABBIT MADE<br>FROM CHEESE</h1>
         <p id="header-sub">A new rabbit every hour. We are not stopping. Ever.</p>
         <span id="drop-badge">NEW DROP EVERY HOUR</span>
-        <div id="subscribe-wrap" style="margin-top:20px;">
-          <div id="subscribe-form">
-            <input type="email" id="sub-email" placeholder="your@email.com" style="font-family:'Press Start 2P',monospace;font-size:0.5rem;padding:10px 14px;border:3px solid #2D1B2E;background:#fff;color:#2D1B2E;width:220px;box-shadow:3px 3px 0 #2D1B2E;outline:none;" />
-            <button onclick="submitSubscribe()" style="font-family:'Press Start 2P',monospace;font-size:0.5rem;padding:10px 16px;background:#2D1B2E;color:#F5C518;border:3px solid #2D1B2E;cursor:pointer;box-shadow:3px 3px 0 #1a0a10;margin-left:6px;">SUBSCRIBE</button>
-          </div>
-          <div id="subscribe-msg" style="display:none;font-family:'Press Start 2P',monospace;font-size:0.55rem;margin-top:10px;color:#2D1B2E;line-height:2;"></div>
-        </div>
+
     <p id="countdown" style="font-family:'Press Start 2P',monospace; font-size:0.6rem; color:#2D1B2E; margin-top:0.5rem; text-align:center; letter-spacing:0.05em;">
       next drop in <span id="timer">--:--</span>
     </p>
@@ -428,6 +502,14 @@
     </footer>
 
   </div><!-- /page-wrap -->
+
+  <!-- ── SUBSCRIBE BAR ── -->
+  <div id="subscribe-bar">
+    <label for="sub-email">🐰 GET HOURLY RABBITS IN YOUR INBOX</label>
+    <input type="email" id="sub-email" placeholder="your@email.com" autocomplete="email" />
+    <button id="sub-btn" onclick="submitSubscribe()">SUBSCRIBE →</button>
+    <div id="subscribe-msg"></div>
+  </div>
 
   <!-- ── LIGHTBOX ── -->
   <div id="lightbox" onclick="closeLightbox()">
