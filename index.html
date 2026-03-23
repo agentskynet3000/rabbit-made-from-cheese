@@ -37,11 +37,6 @@
       50%, 100% { opacity: 0.6; }
     }
 
-    @keyframes pixel-hover {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-
     /* ── LAYOUT ── */
     #page-wrap {
       max-width: 1400px;
@@ -58,10 +53,11 @@
 
     #main-title {
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(0.9rem, 3vw, 1.6rem);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 900;
       color: #FF69B4;
       line-height: 1.6;
-      text-shadow: 3px 3px 0px #FFE4EF;
+      text-shadow: 4px 4px 0px #FFE4EF;
       margin-bottom: 20px;
     }
 
@@ -80,12 +76,13 @@
 
     .new-drop-badge-wrap .nes-badge span {
       animation: badge-blink 1.4s step-end infinite;
+      font-size: 0.85rem !important;
     }
 
     /* ── ROTATING TAGLINES ── */
     .tagline-wrap {
       position: relative;
-      height: 3.5rem;
+      height: 5rem;
       margin: 20px 0 8px;
       overflow: hidden;
     }
@@ -95,7 +92,8 @@
       left: 0;
       right: 0;
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(0.45rem, 1.2vw, 0.6rem);
+      font-size: clamp(0.6rem, 1.5vw, 0.85rem);
+      font-weight: 700;
       color: #2D1B2E;
       opacity: 0;
       text-align: center;
@@ -163,13 +161,14 @@
       top: -10px;
       right: -10px;
       z-index: 2;
-      font-size: 0.55rem;
+      font-size: 0.7rem;
     }
 
     .thumb-caption {
       margin-top: 10px;
       font-family: 'Press Start 2P', monospace;
-      font-size: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
       color: #2D1B2E;
       text-align: center;
       line-height: 1.8;
@@ -182,58 +181,76 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(20, 10, 20, 0.92);
+      background: rgba(20, 10, 20, 0.93);
       z-index: 200;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      gap: 20px;
-      cursor: pointer;
+      gap: 16px;
     }
 
     #lightbox.active {
       display: flex;
     }
 
-    #lightbox-img-wrap {
-      max-width: 80vw;
-      max-height: 75vh;
-    }
-
-    #lightbox-img-wrap.nes-container {
-      padding: 8px !important;
-    }
-
-    #lightbox img {
-      max-width: 76vw;
-      max-height: 70vh;
-      object-fit: contain;
-      display: block;
-    }
-
-    #lightbox-caption {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.6rem;
-      color: rgba(255, 240, 245, 0.8);
-      text-align: center;
-      line-height: 1.8;
-    }
-
     #lightbox-close {
       position: fixed;
       top: 16px;
       right: 20px;
+      z-index: 210;
       font-family: 'Press Start 2P', monospace;
       font-size: 1rem;
-      color: rgba(255, 240, 245, 0.6);
-      cursor: pointer;
-      transition: color 0.1s;
-      background: none;
-      border: none;
+      min-width: 56px;
     }
 
-    #lightbox-close:hover {
-      color: #FF69B4;
+    #lightbox-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      max-width: 90vw;
+    }
+
+    #lightbox-img-wrap {
+      background: #FFF0F5;
+      padding: 8px !important;
+      display: inline-block;
+    }
+
+    #lightbox img {
+      max-width: 75vw;
+      max-height: 62vh;
+      object-fit: contain;
+      display: block;
+      image-rendering: auto;
+    }
+
+    #lightbox-caption {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(0.7rem, 1.5vw, 1rem);
+      font-weight: 700;
+      color: #FFE4EF;
+      text-align: center;
+      line-height: 1.8;
+      text-transform: uppercase;
+    }
+
+    #lightbox-counter {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(0.6rem, 1.2vw, 0.85rem);
+      color: rgba(255, 180, 200, 0.85);
+      text-align: center;
+    }
+
+    #lightbox-nav {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    #lightbox-nav .nes-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.85rem;
     }
 
     /* ── FOOTER ── */
@@ -244,7 +261,8 @@
 
     .footer-title {
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(0.6rem, 2vw, 0.9rem);
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 700;
       color: #FF69B4;
       margin-bottom: 16px;
       line-height: 1.8;
@@ -252,7 +270,8 @@
 
     .footer-sub {
       font-family: 'Press Start 2P', monospace;
-      font-size: 0.55rem;
+      font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+      font-weight: 700;
       color: #2D1B2E;
       line-height: 2.2;
       margin-bottom: 16px;
@@ -260,7 +279,7 @@
 
     .footer-copy {
       font-family: 'Press Start 2P', monospace;
-      font-size: 0.45rem;
+      font-size: 0.65rem;
       color: #a07080;
       margin-top: 12px;
       line-height: 2;
@@ -287,7 +306,8 @@
 
     #footer-nav li {
       font-family: 'Press Start 2P', monospace;
-      font-size: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
       color: #c090a8;
       line-height: 2.5;
       cursor: pointer;
@@ -305,8 +325,12 @@
     @media (max-width: 480px) {
       #page-wrap { padding: 16px 12px; }
       #grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      #main-title { font-size: 0.75rem; }
-      .tagline { font-size: 0.38rem; }
+      #main-title { font-size: 1.2rem; }
+      .tagline { font-size: 0.5rem; }
+      .thumb-caption { font-size: 0.6rem; }
+      #lightbox img { max-width: 90vw; max-height: 55vh; }
+      #lightbox-nav { gap: 12px; }
+      #lightbox-nav .nes-btn { font-size: 0.65rem; }
     }
   </style>
 </head>
@@ -374,11 +398,18 @@
 
   <!-- ── LIGHTBOX ── -->
   <div id="lightbox" onclick="closeLightbox()">
-    <button id="lightbox-close" onclick="closeLightbox()">&#x2715;</button>
-    <div class="nes-container is-rounded" id="lightbox-img-wrap" onclick="event.stopPropagation()">
-      <img id="lightbox-img" src="" alt="">
+    <button id="lightbox-close" class="nes-btn is-error" onclick="event.stopPropagation(); closeLightbox()">X</button>
+    <div id="lightbox-content" onclick="event.stopPropagation()">
+      <div class="nes-container" id="lightbox-img-wrap">
+        <img id="lightbox-img" src="" alt="">
+      </div>
+      <p id="lightbox-caption"></p>
+      <p id="lightbox-counter"></p>
+      <div id="lightbox-nav">
+        <button class="nes-btn is-primary" onclick="lightboxPrev()">&#9664; PREV</button>
+        <button class="nes-btn is-primary" onclick="lightboxNext()">NEXT &#9654;</button>
+      </div>
     </div>
-    <p id="lightbox-caption"></p>
   </div>
 
   <script>
@@ -386,6 +417,9 @@
       "images/rabbit-001-pink-background.jpg",
       "images/rabbit-002-inside-a-fridge.jpg",
     ];
+
+    let shuffledImages = [];
+    let currentLightboxIndex = 0;
 
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
@@ -405,9 +439,22 @@
       return match ? '#' + match[1].padStart(3, '0') : '';
     }
 
-    function openLightbox(src, caption) {
+    function updateLightbox() {
+      const src = shuffledImages[currentLightboxIndex];
+      const caption = captionFromSrc(src);
+      const badge = badgeFromSrc(src);
+      const total = shuffledImages.length;
+
       document.getElementById('lightbox-img').src = src;
-      document.getElementById('lightbox-caption').textContent = caption;
+      document.getElementById('lightbox-img').alt = caption;
+      document.getElementById('lightbox-caption').textContent = caption.toUpperCase();
+      document.getElementById('lightbox-counter').textContent =
+        'Rabbit ' + badge + ' of ' + total;
+    }
+
+    function openLightbox(index) {
+      currentLightboxIndex = index;
+      updateLightbox();
       document.getElementById('lightbox').classList.add('active');
     }
 
@@ -415,19 +462,32 @@
       document.getElementById('lightbox').classList.remove('active');
     }
 
+    function lightboxPrev() {
+      currentLightboxIndex = (currentLightboxIndex - 1 + shuffledImages.length) % shuffledImages.length;
+      updateLightbox();
+    }
+
+    function lightboxNext() {
+      currentLightboxIndex = (currentLightboxIndex + 1) % shuffledImages.length;
+      updateLightbox();
+    }
+
     document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('active')) return;
       if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') lightboxPrev();
+      if (e.key === 'ArrowRight') lightboxNext();
     });
 
     function renderGrid() {
-      const shuffled = shuffle([...images]);
+      shuffledImages = shuffle([...images]);
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
 
-      const count = shuffled.length;
+      const count = shuffledImages.length;
       document.getElementById('rabbit-count-tagline').textContent = count;
 
-      shuffled.forEach(src => {
+      shuffledImages.forEach((src, index) => {
         const caption = captionFromSrc(src);
         const badge = badgeFromSrc(src);
 
@@ -466,7 +526,7 @@
         wrap.appendChild(inner);
         div.appendChild(wrap);
         div.appendChild(cap);
-        div.onclick = () => openLightbox(src, caption);
+        div.onclick = () => openLightbox(index);
         grid.appendChild(div);
       });
     }
