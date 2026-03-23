@@ -307,7 +307,11 @@
         <p id="header-sub">A new rabbit every hour. We are not stopping. Ever.</p>
         <span id="drop-badge">NEW DROP EVERY HOUR</span>
       </div>
-    </header>
+    
+    <div id="countdown" style="font-family:'Press Start 2P',monospace; font-size:0.75rem; color:#2D1B2E; margin-top:0.5rem; letter-spacing:0.05em;">
+      Next drop in <span id="timer">--:--</span>
+    </div>
+</header>
 
     <!-- ── GALLERY ── -->
     <section id="gallery">
@@ -473,6 +477,21 @@
     }
 
     renderGrid();
+  
+    // Countdown to next hour
+    function updateCountdown() {
+      const now = new Date();
+      const nextHour = new Date(now);
+      nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
+      const diff = nextHour - now;
+      const mins = Math.floor(diff / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      const el = document.getElementById('timer');
+      if (el) el.textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
   </script>
 </body>
 </html>
