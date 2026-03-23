@@ -719,30 +719,41 @@
 
     // ── SUBSCRIBE ──
     async function submitSubscribe() {
-      const email = document.getElementById('sub-email').value.trim();
-      const msgEl = document.getElementById('subscribe-msg');
-      const formEl = document.getElementById('subscribe-form');
+      const emailEl = document.getElementById('sub-email');
+      const btnEl = document.getElementById('sub-btn');
+      const email = emailEl.value.trim();
 
       if (!email || !email.includes('@')) {
-        showMsg('please enter a valid email.', '#FF69B4');
+        showMsg('please enter a valid email.', '#c0392b');
         return;
       }
 
+      btnEl.textContent = '...';
+      btnEl.disabled = true;
+
       try {
-        const res = await fetch('/subscribe', {
+        const res = await fetch('https://rabbit-made-from-cheese.pages.dev/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email }),
         });
+        if (!res.ok) throw new Error('server error ' + res.status);
         const data = await res.json();
         if (data.ok) {
-          formEl.style.display = 'none';
+          emailEl.style.display = 'none';
+          btnEl.style.display = 'none';
+          document.querySelector('#subscribe-bar label').textContent = '🐰 GET HOURLY RABBITS IN YOUR INBOX';
           showMsg('subscribed. rabbits incoming. you cannot stop this.', '#2D1B2E');
         } else {
-          showMsg(data.error || 'something went wrong.', '#FF69B4');
+          showMsg(data.error || 'something went wrong.', '#c0392b');
+          btnEl.textContent = 'SUBSCRIBE →';
+          btnEl.disabled = false;
         }
       } catch (e) {
-        showMsg('network error. the rabbits are trying.', '#FF69B4');
+        console.error('subscribe error:', e);
+        showMsg('error: ' + e.message, '#c0392b');
+        btnEl.textContent = 'SUBSCRIBE →';
+        btnEl.disabled = false;
       }
     }
 
