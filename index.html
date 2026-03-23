@@ -24,17 +24,9 @@
     }
 
     /* ── ANIMATIONS ── */
-    @keyframes tagline-show {
-      0%    { opacity: 0; transform: translateY(4px); }
-      5%    { opacity: 1; transform: translateY(0); }
-      15%   { opacity: 1; transform: translateY(0); }
-      20%   { opacity: 0; transform: translateY(-4px); }
-      100%  { opacity: 0; }
-    }
-
     @keyframes badge-blink {
       0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0.6; }
+      50%, 100% { opacity: 0.7; }
     }
 
     /* ── LAYOUT ── */
@@ -46,67 +38,41 @@
 
     /* ── HEADER ── */
     #header-container {
-      margin-bottom: 32px;
-      background: #fff !important;
+      margin-bottom: 24px;
       text-align: center;
+      padding: 32px 16px 16px;
     }
 
     #main-title {
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-size: clamp(3rem, 7vw, 5rem);
       font-weight: 900;
       color: #FF69B4;
-      line-height: 1.6;
-      text-shadow: 4px 4px 0px #FFE4EF;
-      margin-bottom: 20px;
-    }
-
-    .header-icons {
+      line-height: 1.5;
+      text-shadow: 5px 5px 0px #c0508080;
       margin-bottom: 16px;
     }
 
-    .header-icons i {
-      margin: 0 6px;
+    #header-sub {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(0.55rem, 1.2vw, 0.75rem);
+      color: #2D1B2E;
+      line-height: 2;
+      margin-bottom: 20px;
     }
 
     /* ── BADGE ── */
-    .new-drop-badge-wrap {
-      margin: 16px 0;
-    }
-
-    .new-drop-badge-wrap .nes-badge span {
-      animation: badge-blink 1.4s step-end infinite;
-      font-size: 0.85rem !important;
-    }
-
-    /* ── ROTATING TAGLINES ── */
-    .tagline-wrap {
-      position: relative;
-      height: 5rem;
-      margin: 20px 0 8px;
-      overflow: hidden;
-    }
-
-    .tagline {
-      position: absolute;
-      left: 0;
-      right: 0;
+    #drop-badge {
+      display: inline-block;
+      background: #FF69B4;
+      color: #fff;
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(0.6rem, 1.5vw, 0.85rem);
-      font-weight: 700;
-      color: #2D1B2E;
-      opacity: 0;
-      text-align: center;
-      animation: tagline-show 20s infinite;
-      line-height: 1.8;
-      padding: 0 8px;
+      font-size: 0.7rem;
+      padding: 8px 20px;
+      border-radius: 999px;
+      animation: badge-blink 1.4s step-end infinite;
+      letter-spacing: 0.05em;
     }
-
-    .tagline:nth-child(1) { animation-delay: 0s; }
-    .tagline:nth-child(2) { animation-delay: 4s; }
-    .tagline:nth-child(3) { animation-delay: 8s; }
-    .tagline:nth-child(4) { animation-delay: 12s; }
-    .tagline:nth-child(5) { animation-delay: 16s; }
 
     /* ── GRID ── */
     #gallery {
@@ -138,14 +104,10 @@
     .thumb-nes-inner {
       position: absolute;
       inset: 0;
-      background: #FFF0F5;
+      background: transparent;
       overflow: hidden;
-    }
-
-    /* NES container inside thumb — override padding for image fill */
-    .thumb-nes-inner.nes-container {
-      padding: 4px !important;
-      height: 100%;
+      border-radius: 8px;
+      box-shadow: 4px 4px 0px #e8a0b0;
     }
 
     .thumb img {
@@ -325,8 +287,7 @@
     @media (max-width: 480px) {
       #page-wrap { padding: 16px 12px; }
       #grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      #main-title { font-size: 1.2rem; }
-      .tagline { font-size: 0.5rem; }
+      #main-title { font-size: clamp(1.8rem, 9vw, 2.6rem); }
       .thumb-caption { font-size: 0.6rem; }
       #lightbox img { max-width: 90vw; max-height: 55vh; }
       #lightbox-nav { gap: 12px; }
@@ -341,26 +302,10 @@
 
     <!-- ── HEADER ── -->
     <header>
-      <div class="nes-container is-rounded" id="header-container">
-        <div class="header-icons">
-          <i class="nes-icon heart is-medium"></i>
-          <i class="nes-icon star is-medium"></i>
-          <i class="nes-icon heart is-medium"></i>
-        </div>
-
+      <div id="header-container">
         <h1 id="main-title">RABBIT MADE<br>FROM CHEESE</h1>
-
-        <div class="new-drop-badge-wrap">
-          <span class="nes-badge"><span class="is-primary">NEW DROP EVERY HOUR</span></span>
-        </div>
-
-        <div class="tagline-wrap">
-          <p class="tagline">A rabbit. Made from cheese. Every hour.</p>
-          <p class="tagline">Scientists are baffled. Rabbits are concerned.</p>
-          <p class="tagline">Drop #<span id="rabbit-count-tagline">0</span>. We are not stopping. Ever.</p>
-          <p class="tagline">Your parents warned you about this website.</p>
-          <p class="tagline">Each rabbit unique. Like a snowflake. But cheese.</p>
-        </div>
+        <p id="header-sub">A new rabbit every hour. We are not stopping. Ever.</p>
+        <span id="drop-badge">NEW DROP EVERY HOUR</span>
       </div>
     </header>
 
@@ -486,9 +431,6 @@
       const grid = document.getElementById('grid');
       grid.innerHTML = '';
 
-      const count = shuffledImages.length;
-      document.getElementById('rabbit-count-tagline').textContent = count;
-
       shuffledImages.forEach((src, index) => {
         const caption = captionFromSrc(src);
         const badge = badgeFromSrc(src);
@@ -500,7 +442,7 @@
         wrap.className = 'thumb-nes-wrap';
 
         const inner = document.createElement('div');
-        inner.className = 'thumb-nes-inner nes-container is-rounded';
+        inner.className = 'thumb-nes-inner';
 
         const img = document.createElement('img');
         img.src = src;
