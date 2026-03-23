@@ -484,6 +484,10 @@
       const nextHour = new Date(now);
       nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
       const diff = nextHour - now;
+      if (diff <= 1000) {
+        // New drop time — reload to show new rabbit!
+        setTimeout(() => location.reload(), 3000);
+      }
       const mins = Math.floor(diff / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
       const el = document.getElementById('timer');
