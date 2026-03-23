@@ -332,6 +332,13 @@
       #lightbox-nav { gap: 12px; }
       #lightbox-nav .nes-btn { font-size: 0.65rem; }
     }
+  
+  @media (max-width: 600px) {
+    .gallery-grid, #gallery, .grid, [class*="grid"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
   </style>
 </head>
 <body>
