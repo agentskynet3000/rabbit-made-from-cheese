@@ -23,6 +23,75 @@
       image-rendering: pixelated;
     }
 
+    /* ── NEWS TICKER ── */
+    #ticker-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: #1a0a10;
+      border-bottom: 3px solid #F5C518;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      height: 36px;
+    }
+
+    #ticker-label {
+      flex-shrink: 0;
+      background: #F5C518;
+      color: #1a0a10;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+      padding: 0 12px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+      z-index: 2;
+    }
+
+    #ticker-track-wrap {
+      overflow: hidden;
+      flex: 1;
+      position: relative;
+    }
+
+    #ticker-track {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: ticker-scroll 60s linear infinite;
+    }
+
+    #ticker-track:hover {
+      animation-play-state: paused;
+    }
+
+    .ticker-item {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.52rem;
+      color: #F5C518;
+      padding: 0 40px;
+      letter-spacing: 0.04em;
+      line-height: 36px;
+    }
+
+    .ticker-item::before {
+      content: '★ ';
+      color: #FF69B4;
+    }
+
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    body {
+      padding-top: 36px;
+    }
+
     /* ── ANIMATIONS ── */
     @keyframes badge-blink {
       0%, 49% { opacity: 1; }
@@ -298,6 +367,16 @@
 </head>
 <body>
 
+  <!-- ── NEWS TICKER ── -->
+  <div id="ticker-bar">
+    <div id="ticker-label">BREAKING</div>
+    <div id="ticker-track-wrap">
+      <div id="ticker-track">
+        <!-- items injected by JS -->
+      </div>
+    </div>
+  </div>
+
   <div id="page-wrap">
 
     <!-- ── HEADER ── -->
@@ -484,7 +563,71 @@
     }
 
     renderGrid();
-  
+
+    // ── NEWS TICKER ──
+    const allNews = [
+      // Week 1
+      [
+        "Scientists confirm rabbit made from cheese has no opinion on the matter.",
+        "Rabbit made from cheese found in Vatican. Authorities describe the situation as 'fine'.",
+        "New study: 100% of rabbits made from cheese are made from cheese.",
+        "Rabbit made from cheese does not blink. This is normal.",
+        "Local man says rabbit made from cheese 'felt like the right thing to do'. No further questions.",
+        "Rabbit made from cheese spotted at bingo night. Won nothing. Said nothing.",
+        "Experts divided on whether rabbit made from cheese is cheese or rabbit. Conference scheduled.",
+        "Rabbit made from cheese generates new image every hour. Nobody has complained.",
+      ],
+      // Week 2
+      [
+        "Rabbit made from cheese completes 10th appearance. Plans to continue.",
+        "Cheese rabbit achieves kawaii form. Experts say 'yes, that happened'.",
+        "Rabbit made from cheese observed surfing. Wave was also cheese. Coincidence under investigation.",
+        "Skeleton of rabbit made from cheese revealed. It is also cheese.",
+        "Rabbit made from cheese burns man. Authorities confirm this is a festival, not an incident.",
+        "Space agency declines to comment on rabbit made from cheese on ISS.",
+        "Rabbit made from cheese entered into evidence. Trial ongoing.",
+        "New rabbit dropped at midnight. Nobody was awake. It still happened.",
+      ],
+      // Week 3
+      [
+        "Rabbit made from cheese turns 3 weeks old today. Has not aged.",
+        "Archaeologists discover cheese rabbit in ancient Egypt. Carbon dating returns 'yes'.",
+        "Rabbit made from cheese attempted to surf moon. Results inconclusive.",
+        "Haunted house reports cheese rabbit presence. Ghost declines to corroborate.",
+        "Cheese rabbit ranked #1 in category 'rabbit made from cheese'.",
+        "Soviet propaganda rabbit revealed. It is made from cheese. Message unclear.",
+        "Rabbit made from cheese enters renaissance fair. Is asked to leave. Returns.",
+        "Medical community confirms rabbit made from cheese is not a treatment.",
+      ],
+      // Week 4
+      [
+        "Rabbit made from cheese marks one month. Cheese unchanged.",
+        "Rabbit made from cheese photographed in Louvre. Was asked what it was doing there. Did not say.",
+        "Cheese rabbit appears in washing machine. Fabric softener not recommended.",
+        "Rabbit made from cheese attends black tie gala. Cheese confirmed formal.",
+        "Cheese rabbit found inside giant cake. Nobody cut the cake before this.",
+        "Neon noir cheese rabbit detected in rain-soaked alley. Declined interview.",
+        "Rabbit made from cheese has now generated more images than most artists. Artists unavailable for comment.",
+        "End of month summary: rabbit still cheese. Rabbit still rabbit. Everything fine.",
+      ],
+    ];
+
+    function getTodaysNews() {
+      const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+      const weekIndex = Math.floor(dayOfYear / 7) % allNews.length;
+      return allNews[weekIndex];
+    }
+
+    function buildTicker() {
+      const news = getTodaysNews();
+      const track = document.getElementById('ticker-track');
+      // Double the items so the scroll loops seamlessly
+      const doubled = [...news, ...news];
+      track.innerHTML = doubled.map(n => `<span class="ticker-item">${n}</span>`).join('');
+    }
+
+    buildTicker();
+
     // Countdown to next hour
     function updateCountdown() {
       const now = new Date();
