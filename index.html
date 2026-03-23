@@ -47,7 +47,7 @@
       font-family: 'Press Start 2P', monospace;
       font-size: clamp(3rem, 7vw, 5rem);
       font-weight: 900;
-      color: #FF69B4;
+      color: #F5C518;
       line-height: 1.5;
       text-shadow: 5px 5px 0px #c0508080;
       margin-bottom: 16px;
@@ -225,7 +225,7 @@
       font-family: 'Press Start 2P', monospace;
       font-size: clamp(1.4rem, 3vw, 1.8rem);
       font-weight: 700;
-      color: #FF69B4;
+      color: #F5C518;
       margin-bottom: 16px;
       line-height: 1.8;
     }
@@ -263,7 +263,7 @@
     }
 
     #footer-nav.nes-list.is-disc li::before {
-      color: #FF69B4;
+      color: #F5C518;
     }
 
     #footer-nav li {
@@ -276,7 +276,7 @@
     }
 
     #footer-nav li:hover {
-      color: #FF69B4;
+      color: #F5C518;
     }
 
     /* ── RESPONSIVE ── */
@@ -308,10 +308,22 @@
         <span id="drop-badge">NEW DROP EVERY HOUR</span>
       </div>
     
-    <div id="countdown" style="font-family:'Press Start 2P',monospace; font-size:0.75rem; color:#2D1B2E; margin-top:0.5rem; letter-spacing:0.05em;">
-      Next drop in <span id="timer">--:--</span>
+
+    <div id="countdown" style="
+      font-family:'Press Start 2P',monospace;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      color: #2D1B2E;
+      margin-top: 1.5rem;
+      text-align: center;
+      letter-spacing: 0.1em;
+      background: rgba(255,255,255,0.4);
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      border: 3px solid #2D1B2E;
+    ">
+      NEXT DROP IN <span id="timer">--:--</span>
     </div>
-</header>
+  </header>
 
     <!-- ── GALLERY ── -->
     <section id="gallery">
