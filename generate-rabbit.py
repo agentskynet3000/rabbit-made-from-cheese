@@ -21,6 +21,30 @@ GITHUB_REMOTE = "origin"  # remote is configured locally with credentials
 
 MODEL = "juggernautXL_version6Rundiffusion.safetensors"
 
+
+STYLES = [
+    ("photorealistic", "photorealistic, detailed, high quality, product photography style, studio lighting"),
+    ("kawaii", "kawaii style, cute, pastel colors, chibi, anime, soft illustration, sanrio style"),
+    ("tarkovsky", "cinematic still frame, Andrei Tarkovsky style, melancholic, foggy, long exposure, film grain, poetic realism"),
+    ("wes anderson", "Wes Anderson style, symmetrical composition, pastel palette, quirky, detailed set design"),
+    ("oil painting", "classical oil painting, renaissance style, Flemish master, dramatic lighting, museum quality"),
+    ("neon noir", "neon noir, cyberpunk, rain-soaked streets, neon lights, dark atmosphere, blade runner"),
+    ("80s vhs", "80s VHS aesthetic, retro, scanlines, low-fi, vintage television, 1980s color grading"),
+    ("impressionist", "impressionist painting, Claude Monet style, soft brushstrokes, dappled light"),
+    ("brutalist", "brutalist photography, harsh concrete, stark light, architectural, dramatic shadows"),
+    ("ukiyo-e", "ukiyo-e woodblock print, Japanese traditional art, flat colors, bold outlines"),
+    ("baroque", "baroque painting, Caravaggio style, chiaroscuro, dramatic light and shadow, oil on canvas"),
+    ("soviet propaganda", "soviet propaganda poster style, constructivist, bold red, flat graphic design, 1930s"),
+    ("fashion editorial", "high fashion editorial photography, Vogue, dramatic lighting, luxury aesthetic"),
+    ("databending glitch", "glitch art, databending, digital corruption, RGB split, pixel sorting artifacts"),
+    ("studio ghibli", "Studio Ghibli animation style, Hayao Miyazaki, painterly, lush, dreamlike"),
+    ("medical illustration", "vintage medical illustration, anatomical diagram, scientific engraving, 19th century"),
+    ("nat geo photo", "National Geographic photography, wildlife documentary, golden hour, David Attenborough"),
+    ("watercolor", "delicate watercolor painting, soft washes, wet on wet, paper texture"),
+    ("minecraft", "minecraft voxel style, pixel art 3D, blocky, game screenshot"),
+    ("felt craft", "felt craft, handmade, textile art, soft sculpture, crafted from fabric"),
+]
+
 SETTINGS = [
     "in the jungle",
     "on the Empire State Building",
@@ -119,13 +143,14 @@ def build_filename(counter: int, setting: str) -> str:
 
 
 def generate_image(setting: str) -> bytes:
+    style_name, style_desc = random.choice(STYLES)
     prompt = (
         f"rabbit made from cheese, {setting}, "
-        "photorealistic, detailed, high quality, product photography style"
+        f"{style_desc}"
     )
     payload = {
         "prompt": prompt,
-        "negative_prompt": "cartoon, sketch, low quality, blurry",
+        "negative_prompt": "low quality, blurry, deformed",
         "steps": 25,
         "cfg_scale": 7,
         "width": 1024,
