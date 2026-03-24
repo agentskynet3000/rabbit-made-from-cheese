@@ -130,7 +130,7 @@ def build_welcome_html(token):
 
     <div class="body-box">
       <p>Something has happened. You put your email address into a website about rabbits made from cheese, and pressed a button.</p>
-      <p>Every hour, a machine wakes up and makes one. It does not know why. It does not ask. A rabbit emerges from the process, constructed entirely from cheese, and it is sent to you.</p>
+      <p>Every hour, a rabbit is made from cheese. Where the rabbits come from is not discussed. A new one arrives. It is sent to you.</p>
       <p>This is now part of your life.</p>
     </div>
 
