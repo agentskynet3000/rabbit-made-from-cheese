@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Send hourly rabbit newsletter to all subscribers via Cloudflare KV + Gmail SMTP."""
+"""Send daily rabbit newsletter to all subscribers via Cloudflare KV + Gmail SMTP."""
 
 import json
 import os
@@ -41,7 +41,7 @@ CAPTIONS = [
     "We made another one. It is slightly different from the last one. We cannot say in what way.",
     "It has been noted that this is the ninth observation. The rabbit remains unconcerned.",
     "The cheese held its shape longer than expected. This is considered a success.",
-    "A rabbit was produced. It was made from cheese. The hour passed. Another will follow.",
+    "A rabbit was produced. It was made from cheese. The day passed. Another will follow.",
     "Scientists describe the situation as ongoing. The cheese rabbit has not responded to requests for comment.",
     "It looked different this time. Or perhaps it did not. The rabbit does not keep records.",
     "This one came out well. No one can agree on what that means.",
@@ -49,7 +49,7 @@ CAPTIONS = [
     "It is not clear why this is happening. It is very clear that it will continue.",
     "Cheese was used. A rabbit resulted. The machine expressed no opinion.",
     "The rabbit has been generated and sent to you. Your next steps are your own business.",
-    "Another hour. Another rabbit. Another opportunity to reconsider your subscription. You did not.",
+    "Another day. Another rabbit. Another opportunity to reconsider your subscription. You did not.",
     "The output was consistent with previous outputs. This is either reassuring or not.",
     "It emerged from the process looking like exactly what it is. A rabbit. Made from cheese.",
     "No animals were involved in the making of this rabbit. The cheese cannot say the same.",
@@ -130,7 +130,7 @@ def build_welcome_html(token):
 
     <div class="body-box">
       <p>Something has happened. You put your email address into a website about rabbits made from cheese, and pressed a button.</p>
-      <p>Every hour, a rabbit is made from cheese. Where the rabbits come from is not discussed. A new one arrives. It is sent to you.</p>
+      <p>Every day, 24 rabbits are made from cheese. Where the rabbits come from is not discussed. One of them is sent to you.</p>
       <p>This is now part of your life.</p>
     </div>
 
@@ -220,7 +220,7 @@ def build_email_html(rabbit_filename, rabbit_number, caption, token, ai_caption)
     </div>
 
     <div class="footer">
-      You subscribed to hourly rabbits made from cheese.<br>
+      You subscribed to daily rabbits made from cheese.<br>
       This will continue indefinitely.<br><br>
       <a class="unsub" href="{unsub_url}">unsubscribe</a> · if you must.
     </div>
