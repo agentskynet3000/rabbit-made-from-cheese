@@ -129,9 +129,9 @@ def build_welcome_html(token):
     </div>
 
     <div class="body-box">
-      <p>You have subscribed to hourly rabbits made from cheese.</p>
-      <p>Every hour, a machine generates an image of a rabbit. The rabbit is made from cheese. This will arrive in your inbox.</p>
-      <p>There is no further information available at this time.</p>
+      <p>Something has happened. You put your email address into a website about rabbits made from cheese, and pressed a button.</p>
+      <p>Every hour, a machine wakes up and makes one. It does not know why. It does not ask. A rabbit emerges from the process, constructed entirely from cheese, and it is sent to you.</p>
+      <p>This is now part of your life.</p>
     </div>
 
     <div class="cta">
