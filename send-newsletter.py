@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Send daily rabbit newsletter to all subscribers via Cloudflare KV + Gmail SMTP."""
+"""Send daily rabbit digest newsletter to all subscribers via Cloudflare KV + Gmail SMTP."""
 
 import json
 import os
 import re
 import smtplib
 import sys
+from datetime import datetime, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
@@ -62,24 +63,24 @@ def get_caption(number: int) -> str:
 IMAGES_DIR = Path(__file__).parent / "images"
 
 
-def get_latest_rabbit():
-    """Return (filename, number, caption) of the most recent rabbit image."""
-    images = sorted(IMAGES_DIR.glob("rabbit-*.jpg"), reverse=True)
-    if not images:
-        return None, None, None
-    latest = images[0]
-    match = re.match(r"rabbit-(\d+)-(.+)\.jpg", latest.name)
-    if not match:
-        return latest.name, 0, latest.stem
-    number = int(match.group(1))
-    caption = match.group(2).replace("-", " ")
-    return latest.name, number, caption
+def get_todays_rabbits():
+    """Return list of (filename, number, caption) for the last 24 rabbits (today's batch)."""
+    images = sorted(IMAGES_DIR.glob("rabbit-*.jpg"), reverse=True)[:24]
+    # Return in chronological order (oldest first) for the digest
+    images = list(reversed(images))
+    result = []
+    for img in images:
+        match = re.match(r"rabbit-(\d+)-(.+)\.jpg", img.name)
+        if match:
+            number = int(match.group(1))
+            caption = match.group(2).replace("-", " ")
+            result.append((img.name, number, caption))
+    return result
 
 
 def get_subscribers():
     """Fetch all subscribers from Cloudflare KV."""
     headers = {"Authorization": f"Bearer {CF_API_TOKEN}"}
-    # List all keys with prefix "sub:"
     resp = requests.get(f"{KV_BASE}/keys?prefix=sub%3A&limit=1000", headers=headers, timeout=30)
     if not resp.ok:
         print(f"KV list error: {resp.status_code} {resp.text}")
@@ -130,7 +131,7 @@ def build_welcome_html(token):
 
     <div class="body-box">
       <p>Something has happened. You put your email address into a website about rabbits made from cheese, and pressed a button.</p>
-      <p>Every day, 24 rabbits are made from cheese. Where the rabbits come from is not discussed. One of them is sent to you.</p>
+      <p>Every hour, a rabbit is made from cheese. Where the rabbits come from is not discussed. Every night at midnight, all 24 of them are sent to you.</p>
       <p>This is now part of your life.</p>
     </div>
 
@@ -163,7 +164,6 @@ def send_welcome_emails(subscribers):
         try:
             send_email(email, subject, html)
             print(f"Welcome email sent to {email}")
-            # Mark as welcomed
             sub["welcomed"] = True
             kv_key = requests.utils.quote(f"sub:{email}", safe="")
             requests.put(
@@ -176,9 +176,23 @@ def send_welcome_emails(subscribers):
             print(f"Failed welcome email to {email}: {e}")
 
 
-def build_email_html(rabbit_filename, rabbit_number, caption, token, ai_caption):
-    image_url = f"{SITE_URL}/images/{rabbit_filename}" if not rabbit_filename.startswith("images/") else f"{SITE_URL}/{rabbit_filename}"
+def build_daily_digest_html(rabbits, token):
+    """Build daily digest email showing all rabbits from today in a grid."""
     unsub_url = f"{SITE_URL}/unsubscribe?token={token}"
+    today = datetime.now().strftime("%B %d, %Y")
+    count = len(rabbits)
+
+    # Build grid items
+    grid_items = ""
+    for filename, number, caption in rabbits:
+        image_url = f"{SITE_URL}/images/{filename}"
+        grid_items += f"""
+        <div style="width:48%; display:inline-block; vertical-align:top; margin-bottom:16px; box-sizing:border-box; padding:0 1%;">
+          <a href="{SITE_URL}" style="text-decoration:none;">
+            <img src="{image_url}" alt="rabbit #{number:03d}" style="width:100%; border:3px solid #2D1B2E; box-shadow:4px 4px 0 #2D1B2E; display:block;">
+          </a>
+          <div style="font-size:10px; color:#a07080; text-align:center; margin-top:6px; letter-spacing:1px; text-transform:uppercase;"># {number:03d} — {caption}</div>
+        </div>"""
 
     return f"""<!DOCTYPE html>
 <html>
@@ -190,12 +204,9 @@ def build_email_html(rabbit_filename, rabbit_number, caption, token, ai_caption)
     .header {{ text-align: center; margin-bottom: 24px; background: #ffffff; padding: 24px 16px; border-bottom: 4px solid #2D1B2E; }}
     .title {{ font-size: 24px; font-weight: 900; color: #2D1B2E; letter-spacing: 3px; line-height: 1.5; }}
     .badge {{ display: inline-block; background: #F5C518; color: #2D1B2E; font-size: 11px; font-weight: bold; padding: 5px 14px; margin-top: 10px; letter-spacing: 2px; }}
-    .img-wrap {{ text-align: center; margin: 24px 0 15px; padding: 0 10px; }}
-    .img-wrap img {{ max-width: 100%; border: 4px solid #2D1B2E; box-shadow: 6px 6px 0 #2D1B2E; display: block; box-sizing: border-box; }}
-    .ai-caption {{ background: #2D1B2E; color: #FFB7C5; font-size: 13px; font-style: italic; line-height: 1.8; padding: 16px 20px; text-align: center; margin-bottom: 8px; }}
-    .caption {{ text-align: center; font-size: 11px; color: #a07080; font-weight: bold; letter-spacing: 1px; margin: 8px 0 4px; text-transform: uppercase; }}
-    .rabbit-num {{ text-align: center; font-size: 11px; color: #a07080; margin-bottom: 24px; }}
-    .cta {{ text-align: center; margin: 24px 0; }}
+    .intro {{ background: #2D1B2E; color: #FFB7C5; font-size: 13px; line-height: 1.9; padding: 18px 22px; margin-bottom: 20px; text-align: center; }}
+    .grid {{ padding: 0 4px; }}
+    .cta {{ text-align: center; margin: 28px 0 16px; }}
     .cta a {{ background: #2D1B2E; color: #F5C518; padding: 12px 28px; text-decoration: none; font-size: 12px; font-weight: bold; letter-spacing: 2px; display: inline-block; }}
     .footer {{ text-align: center; font-size: 10px; color: #a07080; margin-top: 32px; line-height: 2; }}
     .unsub {{ color: #a07080; text-decoration: underline; }}
@@ -205,22 +216,24 @@ def build_email_html(rabbit_filename, rabbit_number, caption, token, ai_caption)
   <div class="wrap">
     <div class="header">
       <div class="title">RABBIT MADE<br>FROM CHEESE</div>
-      <div class="badge">HOURLY DROP #{rabbit_number:03d}</div>
+      <div class="badge">DAILY DIGEST — {today.upper()}</div>
     </div>
 
-    <div class="img-wrap">
-      <img src="{image_url}" alt="rabbit made from cheese #{rabbit_number:03d}">
+    <div class="intro">
+      {count} rabbits were made from cheese today.<br>
+      Here they all are. You are welcome.
     </div>
-    <div class="ai-caption">{ai_caption}</div>
-    <div class="caption">{caption}</div>
-    <div class="rabbit-num">Rabbit #{rabbit_number:03d}</div>
+
+    <div class="grid">
+      {grid_items}
+    </div>
 
     <div class="cta">
-      <a href="{SITE_URL}">VIEW ALL RABBITS →</a>
+      <a href="{SITE_URL}">SEE THEM ALL →</a>
     </div>
 
     <div class="footer">
-      You subscribed to daily rabbits made from cheese.<br>
+      You subscribed to the daily rabbit digest.<br>
       This will continue indefinitely.<br><br>
       <a class="unsub" href="{unsub_url}">unsubscribe</a> · if you must.
     </div>
@@ -248,14 +261,15 @@ def update_obsidian(subscribers):
     lines = ["# Rabbit Made From Cheese — Subscribers", ""]
     lines.append(f"**Total:** {len(subscribers)}")
     lines.append("")
-    lines.append("| Email | Subscribed |")
-    lines.append("|-------|------------|")
+    lines.append("| Email | Subscribed | Welcomed |")
+    lines.append("|-------|------------|----------|")
     for sub in sorted(subscribers, key=lambda x: x.get("subscribedAt", "")):
         email = sub.get("email", "?")
         date = sub.get("subscribedAt", "?")[:10]
-        lines.append(f"| {email} | {date} |")
+        welcomed = "✅" if sub.get("welcomed") else "⏳"
+        lines.append(f"| {email} | {date} | {welcomed} |")
     lines.append("")
-    lines.append(f"*Last updated: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M')}*")
+    lines.append(f"*Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}*")
 
     Path(OBSIDIAN_SUBSCRIBERS_FILE).parent.mkdir(parents=True, exist_ok=True)
     Path(OBSIDIAN_SUBSCRIBERS_FILE).write_text("\n".join(lines))
@@ -263,12 +277,14 @@ def update_obsidian(subscribers):
 
 
 def main():
-    filename, number, caption = get_latest_rabbit()
-    if not filename:
+    rabbits = get_todays_rabbits()
+    if not rabbits:
         print("No rabbit images found.")
         sys.exit(1)
 
-    print(f"Latest rabbit: #{number:03d} — {caption}")
+    print(f"Found {len(rabbits)} rabbits for today's digest.")
+    latest_number = rabbits[-1][1]  # highest number = newest
+    today = datetime.now().strftime("%B %d, %Y")
 
     subscribers = get_subscribers()
     print(f"Subscribers: {len(subscribers)}")
@@ -281,10 +297,7 @@ def main():
     # Send welcome emails to new subscribers first
     send_welcome_emails(subscribers)
 
-    subject = f"🐰🧀 Rabbit #{number:03d} has arrived — {caption}"
-
-    ai_caption = get_caption(number)
-    print(f"Caption: {ai_caption}")
+    subject = f"🐰🧀 Daily Rabbit Digest — {today} ({len(rabbits)} rabbits)"
 
     sent = 0
     for sub in subscribers:
@@ -292,7 +305,7 @@ def main():
         token = sub.get("token")
         if not email or not token:
             continue
-        html = build_email_html(filename, number, caption, token, ai_caption)
+        html = build_daily_digest_html(rabbits, token)
         try:
             send_email(email, subject, html)
             print(f"Sent to {email}")
@@ -300,7 +313,7 @@ def main():
         except Exception as e:
             print(f"Failed to send to {email}: {e}")
 
-    print(f"Newsletter sent: {sent}/{len(subscribers)}")
+    print(f"Daily digest sent: {sent}/{len(subscribers)}")
     update_obsidian(subscribers)
 
 
