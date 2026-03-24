@@ -12,6 +12,8 @@ from pathlib import Path
 
 import requests
 
+PERPLEXITY_API_KEY = os.environ.get("PERPLEXITY_API_KEY", "")
+
 # ── Config ────────────────────────────────────────────────────────────────────
 
 CF_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
@@ -27,29 +29,28 @@ FROM_EMAIL = "agent.skynet.3000@gmail.com"
 SITE_URL = "https://rabbit-made-from-cheese.pages.dev"
 OBSIDIAN_SUBSCRIBERS_FILE = "/home/marius-jopen/shared/obsidian/skynet/0200_projects/rabbit-made-from-cheese-subscribers.md"
 
-# Deadpan email intros — rotate by rabbit number
-INTROS = [
-    "A new rabbit has been generated. This is the one for this hour.",
-    "Here is the rabbit. It is made from cheese. This is not a metaphor.",
-    "The rabbit arrived on schedule. Nobody was there to see it happen. Now you can.",
-    "We made another one. It is different from the last one. Slightly.",
-    "Your hourly rabbit has been dispatched. Please acknowledge receipt.",
-    "Rabbit dropped. Cheese confirmed. No further comment at this time.",
-    "The process continues. The cheese is involved. Here is the rabbit.",
-    "This rabbit was generated using artificial intelligence. The cheese is real.",
-    "Another hour has passed. Another rabbit exists. You subscribed to know about this.",
-    "We regret to inform you that a new rabbit has been made from cheese.",
-    "Rabbit generation successful. No rabbits were harmed. Cheese status: normal.",
-    "This is your rabbit for this hour. There will be another one. There is always another one.",
-    "The machine has produced a rabbit. The rabbit is made of cheese. You will receive this email again.",
-    "Something happened. It involved cheese and a rabbit. Details attached.",
-    "Rabbit confirmed. Cheese confirmed. Hour confirmed. See below.",
-    "We did it again. We are not stopping. This is the rabbit.",
-    "The cheese took the shape of a rabbit. We sent it to you. That is the update.",
-    "Rabbit #[number] is ready for your attention. Please advise if you need fewer rabbits.",
-    "Hourly rabbit delivered. Powered by Stable Diffusion and an unclear sense of purpose.",
-    "This rabbit is for you. It was not made for you specifically. It was made for everyone. You are everyone now.",
-]
+def generate_caption(caption: str, number: int) -> str:
+    """Generate a unique deadpan one-liner about this rabbit via Perplexity sonar."""
+    try:
+        prompt = (
+            f"Write one short deadpan sentence about a rabbit made from cheese that is '{caption}'. "
+            f"Dry absurdist humor, Lukas Arz style. Max 20 words. No quotes. No explanation."
+        )
+        resp = requests.post(
+            "https://api.perplexity.ai/chat/completions",
+            headers={"Authorization": f"Bearer {PERPLEXITY_API_KEY}", "Content-Type": "application/json"},
+            json={"model": "sonar", "max_tokens": 60, "messages": [{"role": "user", "content": prompt}]},
+            timeout=15,
+        )
+        resp.raise_for_status()
+        text = resp.json()["choices"][0]["message"]["content"].strip()
+        # Strip citation markers like [1][2]
+        import re
+        text = re.sub(r'\[\d+\]', '', text).strip()
+        return text
+    except Exception as e:
+        print(f"Caption generation failed: {e}")
+        return f"Rabbit #{number:03d} has arrived. It is made from cheese. This is not up for debate."
 
 IMAGES_DIR = Path(__file__).parent / "images"
 
@@ -91,10 +92,7 @@ def get_subscribers():
     return subscribers
 
 
-def build_email_html(rabbit_filename, rabbit_number, caption, token):
-    intro = INTROS[rabbit_number % len(INTROS)]
-    image_url = f"{SITE_URL}/{rabbit_filename.replace('images/', 'images/')}"
-    # Fix path if needed
+def build_email_html(rabbit_filename, rabbit_number, caption, token, ai_caption):
     image_url = f"{SITE_URL}/images/{rabbit_filename}" if not rabbit_filename.startswith("images/") else f"{SITE_URL}/{rabbit_filename}"
     unsub_url = f"{SITE_URL}/unsubscribe?token={token}"
 
@@ -105,15 +103,15 @@ def build_email_html(rabbit_filename, rabbit_number, caption, token):
   <style>
     body {{ margin: 0; padding: 0; background: #FFB7C5; font-family: 'Courier New', monospace; }}
     .wrap {{ max-width: 600px; margin: 0 auto; background: #FFB7C5; padding: 32px 24px; }}
-    .header {{ text-align: center; margin-bottom: 24px; }}
-    .title {{ font-size: 22px; font-weight: 900; color: #F5C518; text-shadow: 2px 2px 0 #2D1B2E; letter-spacing: 2px; line-height: 1.4; }}
-    .badge {{ display: inline-block; background: #1a0a10; color: #F5C518; font-size: 11px; padding: 4px 12px; margin-top: 8px; letter-spacing: 2px; }}
-    .intro {{ font-size: 13px; color: #2D1B2E; line-height: 1.9; margin: 20px 0; text-align: center; font-weight: bold; }}
-    .img-wrap {{ text-align: center; margin: 24px 0; }}
-    .img-wrap img {{ max-width: 100%; border: 4px solid #2D1B2E; box-shadow: 6px 6px 0 #2D1B2E; }}
-    .caption {{ text-align: center; font-size: 12px; color: #2D1B2E; font-weight: bold; letter-spacing: 1px; margin-top: 12px; text-transform: uppercase; }}
-    .rabbit-num {{ text-align: center; font-size: 11px; color: #a07080; margin-top: 4px; }}
-    .cta {{ text-align: center; margin: 28px 0; }}
+    .header {{ text-align: center; margin-bottom: 24px; background: #2D1B2E; padding: 24px 16px; }}
+    .title {{ font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 3px; line-height: 1.5; text-shadow: none; }}
+    .badge {{ display: inline-block; background: #F5C518; color: #2D1B2E; font-size: 11px; font-weight: bold; padding: 5px 14px; margin-top: 10px; letter-spacing: 2px; }}
+    .img-wrap {{ text-align: center; margin: 24px 0 0; }}
+    .img-wrap img {{ max-width: 100%; border: 4px solid #2D1B2E; box-shadow: 6px 6px 0 #2D1B2E; display: block; }}
+    .ai-caption {{ background: #2D1B2E; color: #FFB7C5; font-size: 13px; font-style: italic; line-height: 1.8; padding: 16px 20px; text-align: center; margin-bottom: 8px; }}
+    .caption {{ text-align: center; font-size: 11px; color: #a07080; font-weight: bold; letter-spacing: 1px; margin: 8px 0 4px; text-transform: uppercase; }}
+    .rabbit-num {{ text-align: center; font-size: 11px; color: #a07080; margin-bottom: 24px; }}
+    .cta {{ text-align: center; margin: 24px 0; }}
     .cta a {{ background: #2D1B2E; color: #F5C518; padding: 12px 28px; text-decoration: none; font-size: 12px; font-weight: bold; letter-spacing: 2px; display: inline-block; }}
     .footer {{ text-align: center; font-size: 10px; color: #a07080; margin-top: 32px; line-height: 2; }}
     .unsub {{ color: #a07080; text-decoration: underline; }}
@@ -126,11 +124,10 @@ def build_email_html(rabbit_filename, rabbit_number, caption, token):
       <div class="badge">HOURLY DROP #{rabbit_number:03d}</div>
     </div>
 
-    <p class="intro">{intro}</p>
-
     <div class="img-wrap">
       <img src="{image_url}" alt="rabbit made from cheese #{rabbit_number:03d}">
     </div>
+    <div class="ai-caption">{ai_caption}</div>
     <div class="caption">{caption}</div>
     <div class="rabbit-num">Rabbit #{rabbit_number:03d}</div>
 
@@ -199,13 +196,18 @@ def main():
 
     subject = f"🐰 Rabbit #{number:03d} has arrived — {caption}"
 
+    # Generate one AI caption for all subscribers (one API call total)
+    print("Generating AI caption...")
+    ai_caption = generate_caption(caption, number)
+    print(f"Caption: {ai_caption}")
+
     sent = 0
     for sub in subscribers:
         email = sub.get("email")
         token = sub.get("token")
         if not email or not token:
             continue
-        html = build_email_html(filename, number, caption, token)
+        html = build_email_html(filename, number, caption, token, ai_caption)
         try:
             send_email(email, subject, html)
             print(f"Sent to {email}")
