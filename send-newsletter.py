@@ -99,6 +99,83 @@ def get_subscribers():
     return subscribers
 
 
+def build_welcome_html(token):
+    """Build welcome email HTML for new subscribers."""
+    unsub_url = f"{SITE_URL}/unsubscribe?token={token}"
+    return f"""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {{ margin: 0; padding: 0; background: #FFB7C5; font-family: 'Courier New', monospace; }}
+    .wrap {{ max-width: 600px; margin: 0 auto; background: #FFB7C5; padding: 32px 24px; }}
+    .header {{ text-align: center; margin-bottom: 24px; background: #ffffff; padding: 24px 16px; border-bottom: 4px solid #2D1B2E; }}
+    .title {{ font-size: 24px; font-weight: 900; color: #2D1B2E; letter-spacing: 3px; line-height: 1.5; }}
+    .badge {{ display: inline-block; background: #F5C518; color: #2D1B2E; font-size: 11px; font-weight: bold; padding: 5px 14px; margin-top: 10px; letter-spacing: 2px; }}
+    .body-box {{ background: #2D1B2E; color: #FFB7C5; padding: 28px 24px; margin: 0 10px; }}
+    .body-box p {{ font-size: 13px; line-height: 2; margin: 0 0 16px; }}
+    .body-box p:last-child {{ margin: 0; }}
+    .cta {{ text-align: center; margin: 24px 0; }}
+    .cta a {{ background: #2D1B2E; color: #F5C518; padding: 12px 28px; text-decoration: none; font-size: 12px; font-weight: bold; letter-spacing: 2px; display: inline-block; }}
+    .footer {{ text-align: center; font-size: 10px; color: #a07080; margin-top: 32px; line-height: 2; }}
+    .unsub {{ color: #a07080; text-decoration: underline; }}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">RABBIT MADE<br>FROM CHEESE</div>
+      <div class="badge">YOU ARE NOW SUBSCRIBED</div>
+    </div>
+
+    <div class="body-box">
+      <p>You have subscribed to hourly rabbits made from cheese.</p>
+      <p>Every hour, a machine generates an image of a rabbit. The rabbit is made from cheese. This will arrive in your inbox.</p>
+      <p>There is no further information available at this time.</p>
+    </div>
+
+    <div class="cta">
+      <a href="{SITE_URL}">VIEW ALL RABBITS →</a>
+    </div>
+
+    <div class="footer">
+      This will continue indefinitely.<br><br>
+      <a class="unsub" href="{unsub_url}">unsubscribe</a> · if you must.
+    </div>
+  </div>
+</body>
+</html>"""
+
+
+def send_welcome_emails(subscribers):
+    """Send welcome email to any subscriber that hasn't been welcomed yet, then mark them."""
+    headers = {"Authorization": f"Bearer {CF_API_TOKEN}", "Content-Type": "application/json"}
+    subject = "🐰🧀 Welcome to Rabbit Made From Cheese"
+
+    for sub in subscribers:
+        if sub.get("welcomed"):
+            continue
+        email = sub.get("email")
+        token = sub.get("token")
+        if not email or not token:
+            continue
+        html = build_welcome_html(token)
+        try:
+            send_email(email, subject, html)
+            print(f"Welcome email sent to {email}")
+            # Mark as welcomed
+            sub["welcomed"] = True
+            kv_key = requests.utils.quote(f"sub:{email}", safe="")
+            requests.put(
+                f"{KV_BASE}/values/{kv_key}",
+                headers={"Authorization": f"Bearer {CF_API_TOKEN}", "Content-Type": "text/plain"},
+                data=json.dumps(sub),
+                timeout=10,
+            )
+        except Exception as e:
+            print(f"Failed welcome email to {email}: {e}")
+
+
 def build_email_html(rabbit_filename, rabbit_number, caption, token, ai_caption):
     image_url = f"{SITE_URL}/images/{rabbit_filename}" if not rabbit_filename.startswith("images/") else f"{SITE_URL}/{rabbit_filename}"
     unsub_url = f"{SITE_URL}/unsubscribe?token={token}"
@@ -110,11 +187,11 @@ def build_email_html(rabbit_filename, rabbit_number, caption, token, ai_caption)
   <style>
     body {{ margin: 0; padding: 0; background: #FFB7C5; font-family: 'Courier New', monospace; }}
     .wrap {{ max-width: 600px; margin: 0 auto; background: #FFB7C5; padding: 32px 24px; }}
-    .header {{ text-align: center; margin-bottom: 24px; background: #2D1B2E; padding: 24px 16px; }}
-    .title {{ font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 3px; line-height: 1.5; text-shadow: none; }}
+    .header {{ text-align: center; margin-bottom: 24px; background: #ffffff; padding: 24px 16px; border-bottom: 4px solid #2D1B2E; }}
+    .title {{ font-size: 24px; font-weight: 900; color: #2D1B2E; letter-spacing: 3px; line-height: 1.5; }}
     .badge {{ display: inline-block; background: #F5C518; color: #2D1B2E; font-size: 11px; font-weight: bold; padding: 5px 14px; margin-top: 10px; letter-spacing: 2px; }}
-    .img-wrap {{ text-align: center; margin: 24px 0 0; }}
-    .img-wrap img {{ max-width: 100%; border: 4px solid #2D1B2E; box-shadow: 6px 6px 0 #2D1B2E; display: block; }}
+    .img-wrap {{ text-align: center; margin: 24px 0 15px; padding: 0 10px; }}
+    .img-wrap img {{ max-width: 100%; border: 4px solid #2D1B2E; box-shadow: 6px 6px 0 #2D1B2E; display: block; box-sizing: border-box; }}
     .ai-caption {{ background: #2D1B2E; color: #FFB7C5; font-size: 13px; font-style: italic; line-height: 1.8; padding: 16px 20px; text-align: center; margin-bottom: 8px; }}
     .caption {{ text-align: center; font-size: 11px; color: #a07080; font-weight: bold; letter-spacing: 1px; margin: 8px 0 4px; text-transform: uppercase; }}
     .rabbit-num {{ text-align: center; font-size: 11px; color: #a07080; margin-bottom: 24px; }}
@@ -201,7 +278,10 @@ def main():
         update_obsidian([])
         return
 
-    subject = f"🐰 Rabbit #{number:03d} has arrived — {caption}"
+    # Send welcome emails to new subscribers first
+    send_welcome_emails(subscribers)
+
+    subject = f"🐰🧀 Rabbit #{number:03d} has arrived — {caption}"
 
     ai_caption = get_caption(number)
     print(f"Caption: {ai_caption}")
