@@ -201,11 +201,11 @@ def update_index_html(filename: str):
     content = index_path.read_text()
     img_path = f"images/{filename}"
 
-    # Insert into gallery array
+    # Insert into gallery array (uses unique marker to avoid hitting other arrays)
     new_entry = f'      "{img_path}"'
     content = content.replace(
-        '    ];',
-        f'{new_entry},\n    ];'
+        '    ]; // END_GALLERY_ARRAY',
+        f'{new_entry},\n    ]; // END_GALLERY_ARRAY'
     )
 
     # Update OG image tags to newest rabbit
