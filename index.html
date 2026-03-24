@@ -7,7 +7,7 @@
 
   <!-- OG / Social -->
   <meta property="og:title" content="Rabbit Made From Cheese" />
-  <meta property="og:description" content="A new rabbit made from cheese every hour. We are not stopping. Ever." />
+  <meta property="og:description" content="24 new rabbits made from cheese every day. We are not stopping. Ever." />
   <meta property="og:image" content="https://rabbit-made-from-cheese.pages.dev/images/rabbit-025-in-a-bouncy-castle.jpg" />
   <meta property="og:image:width" content="1024" />
   <meta property="og:image:height" content="1024" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Rabbit Made From Cheese" />
-  <meta name="twitter:description" content="A new rabbit made from cheese every hour. We are not stopping. Ever." />
+  <meta name="twitter:description" content="24 new rabbits made from cheese every day. We are not stopping. Ever." />
   <meta name="twitter:image" content="https://rabbit-made-from-cheese.pages.dev/images/rabbit-025-in-a-bouncy-castle.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -476,11 +476,11 @@
     <header>
       <div id="header-container">
         <h1 id="main-title">RABBIT MADE<br>FROM CHEESE</h1>
-        <p id="header-sub">A new rabbit every hour. We are not stopping. Ever.</p>
-        <span id="drop-badge">NEW DROP EVERY HOUR</span>
+        <p id="header-sub">24 new rabbits every day. We are not stopping. Ever.</p>
+        <span id="drop-badge">24 DROPS PER DAY</span>
 
     <p id="countdown" style="font-family:'Press Start 2P',monospace; font-size:0.6rem; color:#2D1B2E; margin-top:0.5rem; text-align:center; letter-spacing:0.05em;">
-      next drop in <span id="timer">--:--</span>
+      daily digest in <span id="timer">--:--:--</span>
     </p>
       </div>
     
@@ -505,7 +505,7 @@
         <p class="footer-title">RABBIT MADE FROM CHEESE</p>
         <p class="footer-sub">
           AN ONGOING INVESTIGATION<br>
-          New rabbit every hour. We will never stop.
+          24 rabbits a day. We will never stop.
         </p>
 
         
@@ -518,7 +518,7 @@
 
   <!-- ── SUBSCRIBE BAR ── -->
   <div id="subscribe-bar">
-    <label for="sub-email">🐰 GET HOURLY RABBITS IN YOUR INBOX</label>
+    <label for="sub-email">🐰 GET DAILY RABBITS IN YOUR INBOX</label>
     <input type="email" id="sub-email" placeholder="your@email.com" autocomplete="email" />
     <button id="sub-btn" onclick="submitSubscribe()">SUBSCRIBE →</button>
     <div id="subscribe-msg"></div>
@@ -692,7 +692,7 @@
         "Local man says rabbit made from cheese 'felt like the right thing to do'. No further questions.",
         "Rabbit made from cheese spotted at bingo night. Won nothing. Said nothing.",
         "Experts divided on whether rabbit made from cheese is cheese or rabbit. Conference scheduled.",
-        "Rabbit made from cheese generates new image every hour. Nobody has complained.",
+        "Rabbit made from cheese generates 24 images per day. Nobody has complained.",
       ],
       // Week 2
       [
@@ -785,7 +785,7 @@
         if (data.ok) {
           emailEl.style.display = 'none';
           btnEl.style.display = 'none';
-          document.querySelector('#subscribe-bar label').textContent = '🐰 GET HOURLY RABBITS IN YOUR INBOX';
+          document.querySelector('#subscribe-bar label').textContent = '🐰 GET DAILY RABBITS IN YOUR INBOX';
           showMsg('subscribed. rabbits incoming. you cannot stop this.', '#2D1B2E');
         } else {
           showMsg(data.error || 'something went wrong.', '#c0392b');
@@ -811,20 +811,17 @@
       if (e.key === 'Enter') submitSubscribe();
     });
 
-    // Countdown to next hour
+    // Countdown to midnight (daily digest)
     function updateCountdown() {
       const now = new Date();
-      const nextHour = new Date(now);
-      nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
-      const diff = nextHour - now;
-      if (diff <= 1000) {
-        // New drop time — reload to show new rabbit!
-        setTimeout(() => location.reload(), 3000);
-      }
-      const mins = Math.floor(diff / 60000);
+      const midnight = new Date(now);
+      midnight.setHours(24, 0, 0, 0);
+      const diff = midnight - now;
+      const hrs  = Math.floor(diff / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
       const el = document.getElementById('timer');
-      if (el) el.textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+      if (el) el.textContent = String(hrs).padStart(2,'0') + ':' + String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
     }
     updateCountdown();
     setInterval(updateCountdown, 1000);
