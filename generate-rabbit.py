@@ -22,107 +22,108 @@ GITHUB_REMOTE = "origin"  # remote is configured locally with credentials
 MODEL = "juggernautXL_version6Rundiffusion.safetensors"
 
 
-STYLES = [
-    ("photorealistic", "photorealistic, detailed, high quality, product photography style, studio lighting"),
-    ("kawaii", "kawaii style, cute, pastel colors, chibi, anime, soft illustration, sanrio style"),
-    ("tarkovsky", "cinematic still frame, Andrei Tarkovsky style, melancholic, foggy, long exposure, film grain, poetic realism"),
-    ("wes anderson", "Wes Anderson style, symmetrical composition, pastel palette, quirky, detailed set design"),
-    ("oil painting", "classical oil painting, renaissance style, Flemish master, dramatic lighting, museum quality"),
-    ("neon noir", "neon noir, cyberpunk, rain-soaked streets, neon lights, dark atmosphere, blade runner"),
-    ("80s vhs", "80s VHS aesthetic, retro, scanlines, low-fi, vintage television, 1980s color grading"),
-    ("impressionist", "impressionist painting, Claude Monet style, soft brushstrokes, dappled light"),
-    ("brutalist", "brutalist photography, harsh concrete, stark light, architectural, dramatic shadows"),
-    ("ukiyo-e", "ukiyo-e woodblock print, Japanese traditional art, flat colors, bold outlines"),
-    ("baroque", "baroque painting, Caravaggio style, chiaroscuro, dramatic light and shadow, oil on canvas"),
-    ("soviet propaganda", "soviet propaganda poster style, constructivist, bold red, flat graphic design, 1930s"),
-    ("fashion editorial", "high fashion editorial photography, Vogue, dramatic lighting, luxury aesthetic"),
-    ("databending glitch", "glitch art, databending, digital corruption, RGB split, pixel sorting artifacts"),
-    ("studio ghibli", "Studio Ghibli animation style, Hayao Miyazaki, painterly, lush, dreamlike"),
-    ("medical illustration", "vintage medical illustration, anatomical diagram, scientific engraving, 19th century"),
-    ("nat geo photo", "National Geographic photography, wildlife documentary, golden hour, David Attenborough"),
-    ("watercolor", "delicate watercolor painting, soft washes, wet on wet, paper texture"),
-    ("minecraft", "minecraft voxel style, pixel art 3D, blocky, game screenshot"),
-    ("felt craft", "felt craft, handmade, textile art, soft sculpture, crafted from fabric"),
-]
-
-SETTINGS = [
-    "in the jungle",
-    "on the Empire State Building",
-    "in the desert",
-    "in outer space",
-    "underwater",
-    "in a medieval castle",
-    "at a rave",
-    "in a sauna",
-    "on the moon",
-    "during a thunderstorm",
-    "in a library",
-    "at a disco",
-    "in the Louvre museum",
-    "surfing a wave",
-    "driving a tractor",
-    "at a sushi restaurant",
-    "in Times Square",
-    "in ancient Rome",
-    "in a volcano",
-    "at a wedding",
-    "on top of the Eiffel Tower",
-    "in a washing machine",
-    "at a heavy metal concert",
-    "inside a fridge",
-    "at a yoga class",
-    "in the Matrix",
-    "on a pirate ship",
-    "at a drive-through",
-    "inside a pinball machine",
-    "at the North Pole",
-    "in a bouncy castle",
-    "at a black tie gala",
-    "inside a giant cake",
-    "in a haunted house",
-    "at a rodeo",
-    "on the International Space Station",
-    "in ancient Egypt",
-    "at a kebab stand at 3am",
-    "in a hedge maze",
-    "at a hot dog eating contest",
-    "inside a snow globe",
-    "at a laundromat",
-    "in Jurassic Park",
-    "at a game show",
-    "on a giant chess board",
-    "at Burning Man",
-    "in a submarine",
-    "at a taxidermy shop",
-    "inside a clock tower",
-    "at a karaoke bar",
-    "on the Great Wall of China",
-    "in a zero-gravity chamber",
-    "at a demolition derby",
-    "inside a supercomputer",
-    "in the Vatican",
-    "at an IKEA",
-    "on a melting iceberg",
-    "in a car wash",
-    "at a flea market",
-    "inside a tornado",
-    "at a renaissance fair",
-    "in a skatepark",
-    "at a silent disco",
-    "in a ball pit",
-    "at the bottom of the Mariana Trench",
-    "inside a lava lamp",
-    "at a bingo night",
-    "in Chernobyl",
-    "on a magic carpet",
-    "at a construction site",
-    "inside a kaleidoscope",
-    "at a retirement home disco",
-    "in the Sahara at night",
-    "inside a snow avalanche",
-    "at a political debate",
-    "in a cemetery at midnight",
-    "on a rainbow",
+# Each context is just a name: director/movie, artist/style, or famous person.
+# Prompt format: (rabbit made from cheese:1.2), [CONTEXT]
+CONTEXTS = [
+    # Directors / Films
+    "Tarkovsky",
+    "Stalker",
+    "Ingmar Bergman",
+    "Persona",
+    "Stanley Kubrick",
+    "2001 A Space Odyssey",
+    "Werner Herzog",
+    "Fitzcarraldo",
+    "David Lynch",
+    "Mulholland Drive",
+    "Wes Anderson",
+    "The Grand Budapest Hotel",
+    "Wong Kar-wai",
+    "In the Mood for Love",
+    "Akira Kurosawa",
+    "Rashomon",
+    "Federico Fellini",
+    "8 1/2",
+    "Jean-Luc Godard",
+    "Breathless",
+    "Lars von Trier",
+    "Melancholia",
+    "Agnès Varda",
+    "Cleo from 5 to 7",
+    "Pier Paolo Pasolini",
+    "Apocalypse Now",
+    "Blade Runner",
+    "Nosferatu",
+    "The Seventh Seal",
+    "Metropolis",
+    # Artists / Art Styles
+    "Caravaggio",
+    "Rembrandt",
+    "Vermeer",
+    "Klimt",
+    "Egon Schiele",
+    "Francis Bacon",
+    "Jean-Michel Basquiat",
+    "Andy Warhol",
+    "Roy Lichtenstein",
+    "Salvador Dali",
+    "René Magritte",
+    "Giorgio de Chirico",
+    "Edward Hopper",
+    "Caspar David Friedrich",
+    "William Turner",
+    "Claude Monet",
+    "Paul Cézanne",
+    "Henri Matisse",
+    "Hieronymus Bosch",
+    "Hokusai",
+    "ukiyo-e style",
+    "bauhaus style",
+    "constructivism",
+    "Soviet propaganda poster",
+    "art nouveau",
+    "brutalism",
+    "Memphis design",
+    "kawaii style",
+    "vaporwave",
+    "glitch art",
+    # Famous People
+    "Arnold Schwarzenegger",
+    "David Bowie",
+    "Freddie Mercury",
+    "Keith Richards",
+    "Grace Jones",
+    "Karl Lagerfeld",
+    "Anna Wintour",
+    "Marlon Brando",
+    "James Dean",
+    "Marilyn Monroe",
+    "Elvis Presley",
+    "Muhammad Ali",
+    "Mick Jagger",
+    "Iggy Pop",
+    "Klaus Kinski",
+    "Werner Herzog",
+    "Cate Blanchett",
+    "Tilda Swinton",
+    "Prince",
+    "Nina Simone",
+    "Miles Davis",
+    "Sun Ra",
+    "Yoko Ono",
+    "Joseph Beuys",
+    "Marina Abramović",
+    "Elon Musk",
+    "Steve Jobs",
+    "Pope Francis",
+    "Genghis Khan",
+    "Napoleon Bonaparte",
+    "Cleopatra",
+    "Nikola Tesla",
+    "Albert Einstein",
+    "Karl Marx",
+    "Friedrich Nietzsche",
+    "Sigmund Freud",
 ]
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -132,40 +133,22 @@ def next_counter() -> int:
     return len(existing) + 1
 
 
-def setting_to_slug(setting: str) -> str:
-    slug = setting.lower()
+def context_to_slug(context: str) -> str:
+    slug = context.lower()
     slug = re.sub(r"[^a-z0-9]+", "-", slug)
     return slug.strip("-")
 
 
-def build_filename(counter: int, setting: str) -> str:
-    return f"rabbit-{counter:03d}-{setting_to_slug(setting)}.jpg"
+def build_filename(counter: int, context: str) -> str:
+    return f"rabbit-{counter:03d}-{context_to_slug(context)}.jpg"
 
 
-def generate_image(setting: str) -> bytes:
-    return generate_image_with_overrides(setting)
+def generate_image(context: str) -> bytes:
+    return generate_image_with_context(context)
 
 
-def generate_image_with_overrides(setting: str, forced_style: str = None) -> bytes:
-    # Pick EITHER a setting OR a style, never both
-    if forced_style:
-        # Find the matching style by name
-        match = next((s for s in STYLES if s[0].lower() == forced_style.lower()), None)
-        if match:
-            style_name, style_desc = match
-            extra = style_desc
-        else:
-            extra = forced_style  # fallback: use as-is
-    elif random.random() > 0.5:
-        style_name, style_desc = random.choice(STYLES)
-        extra = style_desc
-    else:
-        extra = setting
-    
-    prompt = (
-        f"(rabbit made from cheese:1.4), (cheese rabbit:1.3), "
-        f"cheese texture, {extra}"
-    )
+def generate_image_with_context(context: str) -> bytes:
+    prompt = f"(rabbit made from cheese:1.2), {context}"
     payload = {
         "prompt": prompt,
         "negative_prompt": "low quality, blurry, deformed, normal rabbit, fur, realistic animal fur",
@@ -251,23 +234,22 @@ def git_push(filename: str, setting: str):
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--style", help="Force a specific style name (e.g. 'kawaii')")
-    parser.add_argument("--setting", help="Force a specific setting (e.g. 'in the Vatican')")
+    parser.add_argument("--context", help="Force a specific context (e.g. 'Tarkovsky' or 'kawaii style')")
     args = parser.parse_args()
 
-    setting = args.setting or random.choice(SETTINGS)
-    print(f"Setting: {setting}")
+    context = args.context or random.choice(CONTEXTS)
+    print(f"Context: {context}")
 
     counter = next_counter()
-    filename = build_filename(counter, setting)
+    filename = build_filename(counter, context)
     print(f"Filename: {filename}")
 
-    img_bytes = generate_image_with_overrides(setting, forced_style=args.style)
+    img_bytes = generate_image_with_context(context)
     save_image(img_bytes, filename)
     update_index_html(filename)
-    git_push(filename, setting)
+    git_push(filename, context)
 
-    print(f"\nDone! rabbit #{counter:03d} — {setting}")
+    print(f"\nDone! rabbit #{counter:03d} — {context}")
 
 
 if __name__ == "__main__":
