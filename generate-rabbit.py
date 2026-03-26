@@ -148,15 +148,16 @@ def generate_image(context: str) -> bytes:
 
 
 def generate_image_with_context(context: str) -> bytes:
-    prompt = f"(rabbit made from cheese:1.2), {context}"
+    prompt = f"(rabbit made from cheese:2), {context}"
     payload = {
         "prompt": prompt,
         "negative_prompt": "low quality, blurry, deformed, normal rabbit, fur, realistic animal fur",
         "steps": 25,
-        "cfg_scale": 7,
+        "cfg_scale": 6,
         "width": 1024,
         "height": 1024,
-        "sampler_name": "Euler a",
+        "sampler_name": "DPM++ 3M SDE",
+        "scheduler": "Exponential",
         "save_images": True,
         "override_settings": {
             "sd_model_checkpoint": MODEL,
