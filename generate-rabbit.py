@@ -22,6 +22,60 @@ GITHUB_REMOTE = "origin"  # remote is configured locally with credentials
 MODEL = "juggernautXL_version6Rundiffusion.safetensors"
 
 
+# Stupid/absurd LucasArts-style situations. The rabbit is always the protagonist of something dumb.
+SITUATIONS = [
+    "trying to use a pay phone with no hands",
+    "applying for a job at a cheese shop",
+    "waiting for a bus that will never come",
+    "attending a seminar about cheese management",
+    "getting stuck in a revolving door",
+    "filling out a very long form",
+    "arguing with a vending machine",
+    "reading the terms and conditions",
+    "attending his own birthday party alone",
+    "stuck in an elevator with a fax machine",
+    "trying to return a broken toaster",
+    "looking for his keys for the third time",
+    "at the DMV for six hours",
+    "asking for directions in a foreign country",
+    "trying to assemble furniture without instructions",
+    "waiting on hold for customer support",
+    "pretending to understand a map",
+    "caught in a speed trap doing 3mph",
+    "accidentally joining a yoga class",
+    "trying to fit a sofa through a doorway",
+    "standing in the wrong queue at the airport",
+    "on a first date that is clearly going badly",
+    "explaining himself to a customs officer",
+    "attending a mandatory fire safety training",
+    "buying milk at 2am from a confused cashier",
+    "watching TV in a motel room he can't check out of",
+    "at a garage sale trying to sell himself",
+    "asking a librarian for a book that doesn't exist",
+    "trapped under a pile of junk mail",
+    "being towed away while still inside the car",
+    "running for a train he clearly won't catch",
+    "presenting quarterly results to an empty room",
+    "on a broken escalator just standing there",
+    "trying to plug in a three-pronged plug in Europe",
+    "getting a very bad haircut",
+    "at a dog show competing in the wrong category",
+    "losing at tic-tac-toe to a child",
+    "inside a claw machine looking confused",
+    "reading the instructions for a microwave",
+    "trying to parallel park a horse",
+    "winning an award no one cares about",
+    "signing a lease he didn't read",
+    "at a museum standing in front of a fire exit",
+    "trying to use a coupon that expired in 1987",
+    "attending a town hall about a pothole",
+    "reporting a noise complaint to an empty desk",
+    "taking a personality test online",
+    "learning about blockchain at a community center",
+    "getting a loyalty card stamped for the first time",
+    "in a waiting room where the magazine is from 2004",
+]
+
 # Each context is just a name: director/movie, artist/style, or famous person.
 # Prompt format: (rabbit made from cheese:1.2), [CONTEXT]
 CONTEXTS = [
@@ -147,8 +201,15 @@ def generate_image(context: str) -> bytes:
     return generate_image_with_context(context)
 
 
-def generate_image_with_context(context: str) -> bytes:
-    prompt = f"(rabbit made from cheese:2), cheese sculpture, cheese rabbit figurine, in the style of {context}"
+def generate_image_with_context(context: str, situation: str = None) -> bytes:
+    if situation:
+        prompt = (
+            f"(rabbit made from cheese:2), cheese sculpture, cheese rabbit figurine, "
+            f"{situation}, in the style of {context}, "
+            f"absurd, deadpan humor, LucasArts adventure game, Day of the Tentacle"
+        )
+    else:
+        prompt = f"(rabbit made from cheese:2), cheese sculpture, cheese rabbit figurine, in the style of {context}"
     payload = {
         "prompt": prompt,
         "negative_prompt": "human, person, man, woman, face, portrait, hands, holding, people, low quality, blurry, deformed, fur, realistic animal fur",
@@ -239,18 +300,20 @@ def main():
     args = parser.parse_args()
 
     context = args.context or random.choice(CONTEXTS)
+    situation = random.choice(SITUATIONS)
     print(f"Context: {context}")
+    print(f"Situation: {situation}")
 
     counter = next_counter()
     filename = build_filename(counter, context)
     print(f"Filename: {filename}")
 
-    img_bytes = generate_image_with_context(context)
+    img_bytes = generate_image_with_context(context, situation)
     save_image(img_bytes, filename)
     update_index_html(filename)
-    git_push(filename, context)
+    git_push(filename, f"{context} / {situation}")
 
-    print(f"\nDone! rabbit #{counter:03d} — {context}")
+    print(f"\nDone! rabbit #{counter:03d} — {context} / {situation}")
 
 
 if __name__ == "__main__":
