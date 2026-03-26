@@ -689,9 +689,46 @@
       return arr;
     }
 
+    const UNRELATED_LABELS = [
+      "quarterly earnings report", "dental appointment", "mild inconvenience",
+      "terms and conditions", "pending invoice", "loading please wait",
+      "user agreement", "out of office reply", "warranty void if opened",
+      "not a valid receipt", "system update required", "under construction",
+      "lorem ipsum dolor", "error 404 meaning not found", "buffering",
+      "we value your feedback", "this field is required", "cookies accepted",
+      "do not refrigerate", "results may vary", "subject to change",
+      "password must contain a symbol", "your call is important to us",
+      "estimated delivery 3–5 business days", "mild turbulence expected",
+      "item discontinued", "new tab", "untitled document",
+      "for internal use only", "page 1 of 1", "no events this weekend",
+      "read all messages", "cache cleared", "default folder",
+      "annual report 2019", "unsubscribe successful", "file not found",
+      "meeting rescheduled", "draft saved", "tap to reveal",
+      "sold separately", "batteries not included", "handle with care",
+      "this side up", "fragile", "contents may have shifted",
+      "not suitable for children under 3", "store in a cool dry place",
+      "shake well before use", "some assembly required", "void where prohibited",
+      "objects in mirror are closer than they appear", "slippery when wet",
+      "do not iron", "dry clean only", "one size fits all",
+      "your mileage may vary", "limit one per customer", "while supplies last",
+      "offer expires midnight", "no purchase necessary", "see reverse for details",
+      "printed on recycled paper", "certified pre-owned", "as seen on tv",
+      "new and improved", "now with more fiber", "zero calories",
+      "clinically proven", "dermatologist tested", "4 out of 5 dentists agree",
+      "contains no artificial flavors", "made from concentrate",
+      "product of multiple countries", "best before see lid",
+      "keep away from heat and direct sunlight", "not for resale",
+      "promotional item only", "complimentary copy", "draft version",
+      "subject to availability", "management reserves the right",
+      "prices include vat", "all major credit cards accepted",
+      "free wifi password on request", "tip not included",
+    ];
+
     function captionFromSrc(src) {
-      const name = src.split('/').pop().replace(/\.\w+$/, '');
-      return name.replace(/^rabbit-\d+-/, '').replace(/-/g, ' ');
+      // Extract the rabbit number and use it to pick a stable unrelated label
+      const match = src.match(/rabbit-(\d+)-/);
+      const index = match ? (parseInt(match[1], 10) - 1) % UNRELATED_LABELS.length : 0;
+      return UNRELATED_LABELS[index];
     }
 
     function badgeFromSrc(src) {
