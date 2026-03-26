@@ -148,10 +148,10 @@ def generate_image(context: str) -> bytes:
 
 
 def generate_image_with_context(context: str) -> bytes:
-    prompt = f"(rabbit made from cheese:2), {context}"
+    prompt = f"(rabbit made from cheese:2), cheese sculpture, cheese rabbit figurine, in the style of {context}"
     payload = {
         "prompt": prompt,
-        "negative_prompt": "low quality, blurry, deformed, normal rabbit, fur, realistic animal fur",
+        "negative_prompt": "human, person, man, woman, face, portrait, hands, holding, people, low quality, blurry, deformed, fur, realistic animal fur",
         "steps": 25,
         "cfg_scale": 6,
         "width": 1024,
