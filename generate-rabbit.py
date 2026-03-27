@@ -202,23 +202,16 @@ def generate_image(context: str) -> bytes:
 
 
 def generate_image_with_context(context: str, situation: str = None) -> bytes:
-    if situation:
-        prompt = (
-            f"(rabbit made from cheese:2), cheese sculpture, cheese rabbit figurine, "
-            f"{situation}, in the style of {context}, "
-            f"absurd, deadpan humor, LucasArts adventure game, Day of the Tentacle"
-        )
-    else:
-        prompt = f"(rabbit made from cheese:2), cheese sculpture, cheese rabbit figurine, in the style of {context}"
+    prompt = "(rabbit made from cheese:1.5)"
     payload = {
         "prompt": prompt,
-        "negative_prompt": "human, person, man, woman, face, portrait, hands, holding, people, low quality, blurry, deformed, fur, realistic animal fur",
+        "negative_prompt": "",
         "steps": 25,
-        "cfg_scale": 6,
+        "cfg_scale": 3,
         "width": 1024,
         "height": 1024,
         "sampler_name": "DPM++ 3M SDE",
-        "scheduler": "Exponential",
+        "scheduler": "Normal",
         "save_images": True,
         "override_settings": {
             "sd_model_checkpoint": MODEL,
