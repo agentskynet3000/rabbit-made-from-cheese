@@ -202,12 +202,33 @@ def generate_image(context: str) -> bytes:
 
 
 def generate_image_with_context(context: str, situation: str = None) -> bytes:
-    prompt = "(rabbit made from cheese:1.5)"
+    random_words = [
+        "telephone", "umbrella", "saxophone", "concrete", "archipelago",
+        "mustard", "turbine", "spaghetti", "avalanche", "accordion",
+        "parachute", "linoleum", "chrysanthemum", "mayonnaise", "periscope",
+        "trampoline", "cardigan", "casserole", "tambourine", "labyrinth",
+        "persimmon", "marmalade", "stalagmite", "flamingo", "voltmeter",
+        "zeppelin", "porcelain", "harmonica", "seismograph", "croissant",
+        "xylophone", "wolverine", "tangerine", "macaroni", "pendulum",
+        "abacus", "calliope", "dinosaur", "eclair", "fjord",
+        "gazebo", "hologram", "igloo", "jalopy", "kazoo",
+        "lozenge", "mongoose", "nougat", "oboe", "papaya",
+        "quasar", "rucksack", "spatula", "tundra", "ukulele",
+        "vortex", "walrus", "xenon", "yodel", "zucchini",
+        "blimp", "calzone", "daffodil", "elevator", "fondue",
+        "goulash", "haiku", "iceberg", "jackhammer", "kimono",
+        "lychee", "marzipan", "nebula", "ottoman", "pretzel",
+        "quicksand", "radish", "sundial", "tapioca", "umami",
+        "volcano", "wombat", "xylitol", "yarrow", "zamboni",
+    ]
+    random_word = random.choice(random_words)
+    prompt = f"(rabbit made from cheese:1.5), {random_word}"
+    print(f"Random word: {random_word}")
     payload = {
         "prompt": prompt,
         "negative_prompt": "",
         "steps": 25,
-        "cfg_scale": 3,
+        "cfg_scale": 9,
         "width": 1024,
         "height": 1024,
         "sampler_name": "DPM++ 3M SDE",
