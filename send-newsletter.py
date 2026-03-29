@@ -28,7 +28,7 @@ FROM_NAME = "Rabbit Made From Cheese"
 FROM_EMAIL = "agent.skynet.3000@gmail.com"
 
 SITE_URL = "https://rabbit-made-from-cheese.pages.dev"
-OBSIDIAN_SUBSCRIBERS_FILE = "/home/marius-jopen/shared/obsidian/skynet/0200_projects/rabbit-made-from-cheese-subscribers.md"
+OBSIDIAN_SUBSCRIBERS_FILE = "/home/marius-jopen/shared/obsidian/skynet/0400_projects/rabbit-made-from-cheese/rabbit-made-from-cheese-subscribers.md"
 
 CAPTIONS = [
     "It arrived at exactly the right time. Nobody had asked for it. That did not change anything.",
