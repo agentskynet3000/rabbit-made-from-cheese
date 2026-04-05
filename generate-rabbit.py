@@ -226,7 +226,7 @@ def generate_image_with_context(context: str, situation: str = None) -> bytes:
     print(f"Random word: {random_word}")
     payload = {
         "prompt": prompt,
-        "negative_prompt": "",
+        "negative_prompt": "ugly, 2 heads, duplicate, blurry, abstract, disfigured, deformed, cartoon, 3d, disfigured, bad art, poorly drawn, extra limbs, close up, b&w, weird colors, blurry, watermark, blur haze, watermark, elongated body, cropped image, out of frame, draft, deformed hands, twisted fingers, double image, malformed hands, multiple heads, extra limb, ugly, poorly drawn hands, missing limb, cut-off, over saturated, grain, low res, bad anatomy, poorly drawn face, mutation, mutated, floating limbs, disconnected limbs, out of focus, long body, disgusting, extra fingers, gross proportions, missing arms, mutated hands, cloned face, missing legs",
         "steps": 25,
         "cfg_scale": 9,
         "width": 1024,
