@@ -222,7 +222,7 @@ def generate_image_with_context(context: str, situation: str = None) -> bytes:
         "volcano", "wombat", "xylitol", "yarrow", "zamboni",
     ]
     random_word = random.choice(random_words)
-    prompt = f"(rabbit made from cheese:1.5), {random_word}"
+    prompt = f"(rabbit made from cheese:1.5), glossy, shiny, {random_word}"
     print(f"Random word: {random_word}")
     payload = {
         "prompt": prompt,
